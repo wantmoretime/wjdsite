@@ -19,9 +19,9 @@ enableMissingTranslationPlaceholders = false
 [Params]
 
     # Souce Code repository section
-    description = "just learn more"
+    description = "Just learn more"
     github_repository = "https://github.com/wantmoretime/wjdsite/"
-    version = "0.5.0"
+    #version = "0.5.0"
 
     # Documentation repository section
     # documentation repository (set edit link to documentation repository)

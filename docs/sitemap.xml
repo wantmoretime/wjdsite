@@ -8,11 +8,6 @@
   </url>
   
   <url>
-    <loc>https://wantmoretime.github.io/wjdsite/c&#43;&#43;/</loc>
-    <lastmod>2020-01-07T14:42:34+08:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://wantmoretime.github.io/wjdsite/categories/c/c&#43;&#43;/</loc>
     <lastmod>2020-01-07T14:42:34+08:00</lastmod>
   </url>
@@ -38,7 +33,22 @@
   </url>
   
   <url>
+    <loc>https://wantmoretime.github.io/wjdsite/c&#43;&#43;/</loc>
+    <lastmod>2020-01-07T11:19:37+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wantmoretime.github.io/wjdsite/go/</loc>
+    <lastmod>2020-01-07T11:19:37+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://wantmoretime.github.io/wjdsite/</loc>
+    <lastmod>2020-01-07T11:19:37+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wantmoretime.github.io/wjdsite/tool/</loc>
     <lastmod>2020-01-07T11:19:37+08:00</lastmod>
   </url>
   
@@ -74,11 +84,6 @@
   
   <url>
     <loc>https://wantmoretime.github.io/wjdsite/go/github&#43;hugo_build_myblog/</loc>
-    <lastmod>2020-01-04T18:38:29+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://wantmoretime.github.io/wjdsite/go/</loc>
     <lastmod>2020-01-04T18:38:29+08:00</lastmod>
   </url>
   
