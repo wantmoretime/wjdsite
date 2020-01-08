@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>线程锁 - Hugo Techdoc Theme</title>
+<meta name="description" content="线程锁及Pthread API接口使用">
+<meta name="generator" content="Hugo 0.62.1" />
+<link href="https://example.comindex.xml" rel="alternate" type="application/rss+xml">
+<link rel="canonical" href="https://example.com/c&#43;&#43;/thread_lock/">
+<link rel="stylesheet" href="https://example.com/css/theme.min.css">
+<script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+<link rel="stylesheet" href="https://example.com/css/chroma.min.css">
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery.easing@1.4.1/jquery.easing.min.js"></script>
+<script src="https://example.com/js/bundle.js"></script><style>
+:root {}
+</style>
+<meta property="og:title" content="线程锁" />
+<meta property="og:description" content="线程锁及Pthread API接口使用" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://example.com/c&#43;&#43;/thread_lock/" />
+<meta property="og:image" content="https://example.com/og-image.png"/>
+<meta property="article:published_time" content="2020-01-07T14:42:34+08:00" />
+<meta property="article:modified_time" content="2020-01-07T14:42:34+08:00" /><meta property="og:site_name" content="Hugo Techdoc Theme" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://example.com/og-image.png"/>
+
+<meta name="twitter:title" content="线程锁"/>
+<meta name="twitter:description" content="线程锁及Pthread API接口使用"/>
+<meta itemprop="name" content="线程锁">
+<meta itemprop="description" content="线程锁及Pthread API接口使用">
+<meta itemprop="datePublished" content="2020-01-07T14:42:34&#43;08:00" />
+<meta itemprop="dateModified" content="2020-01-07T14:42:34&#43;08:00" />
+<meta itemprop="wordCount" content="1682">
+<meta itemprop="image" content="https://example.com/og-image.png"/>
+
+
+
+<meta itemprop="keywords" content="C&#43;&#43;11,multi-thread," /></head>
+<body><div class="container"><header>
+<h1>Hugo Techdoc Theme</h1>
+
+ <span class="version">Version 0.5.0</span>
+<a href="https://github.com/thingsym/hugo-theme-techdoc" class="github"><i class="fab fa-github"></i></a>
+<p class="description">put your description</p>
+
+</header>
+<div class="global-menu">
+<nav>
+<ul>
+<li><a href="/">Home</a></li>
+<li><a href="https://twitter.com/thingsym">Twitter</a></li></ul>
+</nav>
+</div>
+<div class="content-container">
+<main><h1>线程锁</h1>
+<p>多线程程序中，一般可能“同时发生多个写操作”或“同时发生读写操作”的情况时，必须加锁。如果只是同时发生多个读操作没有写操作的话，不需要加锁。</p>
+<p>多线程编程中常见的几种线程锁：互斥锁、条件变量、自旋锁、读写锁、递归锁，一般而言，锁的功能越强大，性能就会越低。下面介绍几种锁及pthread库的一些API使用。</p>
+<h2 id="heading">同步与互斥</h2>
+<p>[同步]：是指散布在不同任务之间的若干程序片断，它们的运行必须严格按照规定的某种先后次序来运行，这种先后次序依赖于要完成的特定的任务。</p>
+<p>[互斥]：是指散布在不同任务之间的若干程序片断，当某个任务运行其中一个程序片段时，其它任务就不能运行它们之中的任一程序片段，只能等到该任务运行完这个程序片段后才可以运行。</p>
+<p><em><strong>互斥是指某一资源同时只允许一个访问者对其进行访问，具有唯一性和排它性。但互斥无法控制对资源的访问顺序。</strong></em></p>
+<p><em><strong>同步是指在互斥的基础上实现对资源的有序访问。</strong></em></p>
+<h2 id="mutex">互斥锁(mutex)</h2>
+<p>互斥锁具有以下特点：</p>
+<p>原子性和唯一性：把一个互斥锁定义为一个原子操作，由操作系统保证，当一个线程获得了互斥锁，则其他线程无法在该锁未释放时获得这个锁。</p>
+<p>非忙等待：如果一个线程获得了一个互斥锁，则后续其他线程尝试去获取这个锁都将被挂起（不占用cpu资源），直到前面的线程释放该互斥锁，后续线程才能被唤醒并继续执行。</p>
+<div class="highlight"><pre class="chroma"><code class="language-c++" data-lang="c++"><span class="cp">#</span><span class="cp">include</span> <span class="cpf">&lt;pthread.h&gt;</span><span class="cp">
+</span><span class="cp"></span><span class="n">pthread_mutex_t</span><span class="o">*</span>      <span class="n">mutex</span><span class="p">;</span>
+<span class="n">mutex</span> <span class="o">=</span> <span class="k">new</span> <span class="n">pthread_mutex_t</span><span class="p">(</span><span class="p">)</span><span class="p">;</span> <span class="c1">//创建一个锁对象
+</span><span class="c1"></span><span class="c1">//phtread_mutexattr_t*  mutexattr;  //互斥锁属性，默认属性取NULL
+</span><span class="c1"></span>
+<span class="c1">//初始化锁
+</span><span class="c1"></span><span class="n">pthread_mutex_init</span><span class="p">(</span><span class="n">mutex</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">)</span><span class="p">;</span>                     <span class="c1">//动态初始化互斥锁
+</span><span class="c1"></span><span class="c1">//pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;  //静态初始化互斥锁
+</span><span class="c1"></span>
+<span class="c1">// 对互斥锁上锁，若互斥锁已经上锁，则调用者一直阻塞，
+</span><span class="c1"></span><span class="c1">// 直到互斥锁解锁后再上锁。
+</span><span class="c1"></span><span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="n">mutex</span><span class="p">)</span><span class="p">;</span>
+
+<span class="c1">// 调用该函数时，若互斥锁未加锁，则上锁，返回 0；
+</span><span class="c1"></span><span class="c1">// 若互斥锁已加锁，则函数直接返回失败，即 EBUSY。
+</span><span class="c1"></span><span class="n">pthread_mutex_trylock</span><span class="p">(</span><span class="n">mutex</span><span class="p">)</span><span class="p">;</span>
+
+<span class="c1">// 当线程试图获取一个已加锁的互斥量时，pthread_mutex_timedlock允许绑定线程阻塞时间。
+</span><span class="c1"></span><span class="c1">// pthread_mutex_timedlock函数与pthread_mutex_lock函数是基本等价的；
+</span><span class="c1"></span><span class="c1">// 但是当达成超时时间，pthread_mutex_timedlock因没拿到互斥锁而返回错误码ETIMEOUT
+</span><span class="c1"></span><span class="k">struct</span> <span class="nc">timespec</span> <span class="n">timeout</span><span class="p">;</span>
+<span class="n">clock_gettime</span><span class="p">(</span><span class="n">CLOCK_REALTIME</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">timeout</span><span class="p">)</span><span class="p">;</span>
+<span class="n">pthread_mutex_timedlock</span><span class="p">(</span><span class="n">mutex</span><span class="p">,</span><span class="o">&amp;</span><span class="n">timeout</span><span class="p">)</span><span class="p">;</span>
+
+<span class="c1">// 对指定的互斥锁解锁。
+</span><span class="c1"></span><span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="n">mutex</span><span class="p">)</span><span class="p">;</span>
+
+<span class="c1">// 销毁指定的一个互斥锁。互斥锁在使用完毕后，
+</span><span class="c1"></span><span class="c1">// 必须要对互斥锁进行销毁，以释放资源。
+</span><span class="c1"></span><span class="n">pthread_mutex_destroy</span><span class="p">(</span><span class="n">mutex</span><span class="p">)</span><span class="p">;</span>
+<span class="k">delete</span> <span class="n">mutex</span><span class="p">;</span>
+</code></pre></div><h2 id="condition-variable">条件变量(condition variable)</h2>
+<p>利用线程间共享的全局变量进行同步的一种机制，主要包括两个动作：</p>
+<ul>
+<li>
+<p>一个线程阻塞等待“条件变量的条件成立”而挂起</p>
+</li>
+<li>
+<p>另一个线程通知“条件成立”（给出条件成立信号）</p>
+</li>
+</ul>
+<p>为了防止竞争，条件变量的使用总是和互斥锁结合在一起。</p>
+<div class="highlight"><pre class="chroma"><code class="language-c++" data-lang="c++"><span class="n">pthread_cond_t</span><span class="o">*</span>                 <span class="n">m_cond</span><span class="p">;</span>
+<span class="n">pthread_condattr_t</span><span class="o">*</span>             <span class="n">m_condattr</span><span class="p">;</span>
+
+<span class="n">pthread_condattr_init</span><span class="p">(</span><span class="n">m_condattr</span><span class="p">)</span><span class="p">;</span>
+<span class="n">pthread_mutexattr_setpshared</span><span class="p">(</span><span class="o">&amp;</span><span class="n">m_condattr</span><span class="p">,</span><span class="n">PTHREAD_PROCESS_SHARED</span><span class="p">)</span><span class="p">;</span>  <span class="c1">//设置进程共享属性
+</span><span class="c1"></span><span class="n">pthread_condattr_setclock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">m_condattr</span><span class="p">,</span> <span class="n">CLOCK_MONOTONIC</span><span class="p">)</span><span class="p">;</span>  <span class="c1">//设置时间属性
+</span><span class="c1"></span><span class="n">pthread_cond_init</span><span class="p">(</span><span class="n">m_cond</span><span class="p">,</span> <span class="n">m_condattr</span><span class="p">)</span><span class="p">;</span>
+
+<span class="c1">//通知
+</span><span class="c1"></span><span class="n">pthread_cond_signal</span><span class="p">(</span><span class="n">m_cond</span><span class="p">)</span><span class="p">;</span>   
+<span class="n">pthread_cond_broadcast</span><span class="p">(</span><span class="n">m_cond</span><span class="p">)</span><span class="p">;</span> <span class="c1">//唤醒所有的线程
+</span><span class="c1"></span>
+<span class="c1">//等待:m_mutex为互斥锁，先解锁互斥锁，以阻塞方式等待条件变量，收到信号后，再进行加锁
+</span><span class="c1"></span><span class="n">pthread_cond_wait</span><span class="p">(</span><span class="n">m_cond</span><span class="p">,</span> <span class="n">m_mutex</span><span class="p">)</span><span class="p">;</span><span class="c1">//
+</span><span class="c1"></span><span class="n">pthread_cond_timedwait</span><span class="p">(</span><span class="n">m_cond</span><span class="p">,</span> <span class="n">m_mutex</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">timeout</span><span class="p">)</span><span class="p">;</span>  <span class="c1">//指定等待时间
+</span><span class="c1"></span>
+<span class="n">pthread_condattr_destroy</span><span class="p">(</span><span class="n">m_condattr</span><span class="p">)</span><span class="p">;</span>
+<span class="n">pthread_cond_destroy</span><span class="p">(</span><span class="n">m_cond</span><span class="p">)</span><span class="p">;</span>
+
+<span class="k">delete</span> <span class="n">m_cond</span><span class="p">;</span>
+<span class="k">delete</span> <span class="n">m_condattr</span><span class="p">;</span>
+</code></pre></div><h2 id="spin-lock">自旋锁(spin lock)</h2>
+<p>自旋锁：当一个线程在获取锁的时候，如果锁已经被其它线程获取，那么该线程将循环等待，然后不断的判断锁是否能够被成功获取，直到获取到锁才会退出循环。</p>
+<p>获取锁的线程一直处于活跃状态，但是并没有执行任何有效的任务，使用这种锁会造成忙等(busy-waiting)。因此自旋锁不应该被长时间持有，否则特别的浪费CPU时间，自旋锁设计的初衷应该是短时间内进行轻量级的加锁。</p>
+<p>自旋锁与互斥锁比较：线程在等待一个自旋锁释放会占用cpu空转避免不必要的上下文切换，等待互斥锁则是将线程挂起，不会占用cpu，代价是需要线程上下文切换的开销。</p>
+<div class="highlight"><pre class="chroma"><code class="language-c++" data-lang="c++"><span class="kt">int</span> <span class="nf">pthread_spin_destroy</span><span class="p">(</span><span class="n">pthread_spinlock_t</span> <span class="o">*</span><span class="n">lock</span><span class="p">)</span><span class="p">;</span>
+<span class="kt">int</span> <span class="nf">pthread_spin_init</span><span class="p">(</span><span class="n">pthread_spinlock_t</span> <span class="o">*</span><span class="n">lock</span><span class="p">,</span> <span class="kt">int</span> <span class="n">pshared</span><span class="p">)</span><span class="p">;</span><span class="c1">//设置自旋锁多进程共享
+</span><span class="c1"></span>
+<span class="kt">int</span> <span class="nf">pthread_spin_lock</span><span class="p">(</span><span class="n">pthread_spinlock_t</span> <span class="o">*</span><span class="n">lock</span><span class="p">)</span><span class="p">;</span>
+<span class="kt">int</span> <span class="nf">pthread_spin_trylock</span><span class="p">(</span><span class="n">pthread_spinlock_t</span> <span class="o">*</span><span class="n">lock</span><span class="p">)</span><span class="p">;</span>
+<span class="kt">int</span> <span class="nf">pthread_spin_unlock</span><span class="p">(</span><span class="n">pthread_spinlock_t</span> <span class="o">*</span><span class="n">lock</span><span class="p">)</span><span class="p">;</span>
+</code></pre></div><h2 id="heading-1">读写锁</h2>
+<p>读锁：可以在没有写锁的时候被多个线程持有</p>
+<p>写锁：只能有一个写锁，是独占的(排他的)</p>
+<p>互斥原则：</p>
+<ul>
+<li>读-读能共存;</li>
+<li>读-写不能共存;</li>
+<li>写-写不能共存。</li>
+</ul>
+<p>所有读写锁的实现必须确保写操作对读操作的内存影响。</p>
+<div class="highlight"><pre class="chroma"><code class="language-c++" data-lang="c++"><span class="kt">int</span> <span class="nf">pthread_rwlock_init</span><span class="p">(</span><span class="n">pthread_rwlock_t</span> <span class="o">*</span><span class="k">restrict</span> <span class="n">rwlock</span><span class="p">,</span> <span class="k">const</span> <span class="n">pthread_rwlockattr_t</span> <span class="o">*</span><span class="k">restrict</span> <span class="n">attr</span><span class="p">)</span><span class="p">;</span>                                         <span class="c1">//初始化读写锁
+</span><span class="c1"></span><span class="kt">int</span> <span class="nf">pthread_rwlock_destroy</span><span class="p">(</span><span class="n">pthread_rwlock_t</span> <span class="o">*</span><span class="n">rwlock</span><span class="p">)</span><span class="p">;</span>    <span class="c1">//销毁读写锁
+</span><span class="c1"></span><span class="kt">int</span> <span class="nf">pthread_rwlock_rdlock</span><span class="p">(</span><span class="n">pthread_rwlock_t</span> <span class="o">*</span><span class="n">rwlock</span><span class="p">)</span><span class="p">;</span>     <span class="c1">//加读锁
+</span><span class="c1"></span><span class="c1">//阻塞: 之前对这把锁加的写锁的操作
+</span><span class="c1"></span><span class="kt">int</span> <span class="nf">pthread_rwlock_tryrdlock</span><span class="p">(</span><span class="n">pthread_rwlock_t</span> <span class="o">*</span><span class="n">rwlock</span><span class="p">)</span><span class="p">;</span>  <span class="c1">//尝试加读锁
+</span><span class="c1"></span><span class="c1">//加锁成功: 0; 加锁失败: 错误号
+</span><span class="c1"></span><span class="kt">int</span> <span class="nf">pthread_rwlock_wrlock</span><span class="p">(</span><span class="n">pthread_rwlock_t</span> <span class="o">*</span><span class="n">rwlock</span><span class="p">)</span><span class="p">;</span>     <span class="c1">//加写锁
+</span><span class="c1"></span><span class="c1">//阻塞: 上一次加写锁还没有解锁; 上一次加读锁没解锁
+</span><span class="c1"></span><span class="kt">int</span> <span class="nf">pthread_rwlock_trywrlock</span><span class="p">(</span><span class="n">pthread_rwlock_t</span> <span class="o">*</span><span class="n">rwlock</span><span class="p">)</span><span class="p">;</span>  <span class="c1">//尝试加写锁
+</span><span class="c1"></span><span class="kt">int</span> <span class="nf">pthread_rwlock_unlock</span><span class="p">(</span><span class="n">pthread_rwlock_t</span> <span class="o">*</span><span class="n">rwlock</span><span class="p">)</span><span class="p">;</span>     <span class="c1">//解锁
+</span></code></pre></div><div class="edit-meta">
+Last updated on 7 Jan 2020
+
+
+<br>
+Published on 7 Jan 2020
+<br><a href="https://github.com/thingsym/hugo-theme-techdoc/edit/master/content/C&#43;&#43;%5cthread_lock.md" class="edit-page"><i class="fas fa-pen-square"></i> Edit on GitHub</a></div><nav class="pagination"><a class="nav nav-prev" href="/go/github&#43;hugo_build_myblog/" title="Github&#43;Hugo搭建个人博客网站"><i class="fas fa-arrow-left" aria-hidden="true"></i> Prev - Github&#43;Hugo搭建个人博客网站</a>
+<a class="nav nav-next" href="/c&#43;&#43;/function_pointers/" title="C&#43;&#43;函数指针">Next - C&#43;&#43;函数指针 <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+</nav><footer><p class="powered">Powered by <a href="https://gohugo.io">Hugo</a>. Theme by <a href="https://themes.gohugo.io/hugo-theme-techdoc/">TechDoc</a>. Designed by <a href="https://github.com/thingsym/hugo-theme-techdoc">Thingsym</a>.</p>
+</footer>
+</main><div class="sidebar">
+
+<nav class="open-menu">
+<ul>
+<li class=""><a href="https://example.com">Home</a></li>
+
+<li class="parent"><a href="/c&#43;&#43;/">C&#43;&#43;s</a>
+  
+<ul class="sub-menu">
+<li class="active"><a href="/c&#43;&#43;/thread_lock/">线程锁</a></li>
+<li class=""><a href="/c&#43;&#43;/function_pointers/">C&#43;&#43;函数指针</a></li>
+<li class=""><a href="/c&#43;&#43;/emplace_back/">C&#43;&#43;11 emplace相关函数</a></li>
+</ul>
+  
+</li>
+
+<li class=""><a href="/go/">Gos</a>
+  
+<ul class="sub-menu">
+<li class=""><a href="/go/github&#43;hugo_build_myblog/">Github&#43;Hugo搭建个人博客网站</a></li>
+</ul>
+  
+</li>
+
+<li class=""><a href="">Tools</a>
+  
+</li>
+</ul>
+</nav>
+
+
+
+<div class="sidebar-footer"></div>
+</div>
+</div><a href="#" id="backtothetop-fixed" class="backtothetop"
+ data-backtothetop-duration="600"
+ data-backtothetop-easing="easeOutQuart"
+ data-backtothetop-fixed-fadeIn="1000"
+ data-backtothetop-fixed-fadeOut="1000"
+ data-backtothetop-fixed-bottom="10"
+ data-backtothetop-fixed-right="20">
+<span class="fa-layers fa-fw">
+<i class="fas fa-circle"></i>
+<i class="fas fa-arrow-circle-up"></i>
+</span></a>
+</div>
+</body>
+</html>

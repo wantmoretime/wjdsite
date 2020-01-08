@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Github&#43;Hugo搭建个人博客网站 - wangjd&#39;s blog</title>
+<meta name="description" content="从零开始搭建属于自己的静态网站">
+<meta name="generator" content="Hugo 0.62.1" />
+<link href="https://example.comindex.xml" rel="alternate" type="application/rss+xml">
+<link rel="canonical" href="https://example.com/go/github&#43;hugo_build_myblog/">
+<link rel="stylesheet" href="https://example.com/css/theme.min.css">
+<script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+<link rel="stylesheet" href="https://example.com/css/chroma.min.css">
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery.easing@1.4.1/jquery.easing.min.js"></script>
+<script src="https://example.com/js/bundle.js"></script><style>
+:root {}
+</style>
+<meta property="og:title" content="Github&#43;Hugo搭建个人博客网站" />
+<meta property="og:description" content="从零开始搭建属于自己的静态网站" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://example.com/go/github&#43;hugo_build_myblog/" />
+<meta property="og:image" content="https://example.com/og-image.png"/>
+<meta property="article:published_time" content="2020-01-04T18:38:29+08:00" />
+<meta property="article:modified_time" content="2020-01-04T18:38:29+08:00" /><meta property="og:site_name" content="Hugo Techdoc Theme" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://example.com/og-image.png"/>
+
+<meta name="twitter:title" content="Github&#43;Hugo搭建个人博客网站"/>
+<meta name="twitter:description" content="从零开始搭建属于自己的静态网站"/>
+<meta itemprop="name" content="Github&#43;Hugo搭建个人博客网站">
+<meta itemprop="description" content="从零开始搭建属于自己的静态网站">
+<meta itemprop="datePublished" content="2020-01-04T18:38:29&#43;08:00" />
+<meta itemprop="dateModified" content="2020-01-04T18:38:29&#43;08:00" />
+<meta itemprop="wordCount" content="1343">
+<meta itemprop="image" content="https://example.com/og-image.png"/>
+
+
+
+<meta itemprop="keywords" content="hugo,github," /></head>
+<body><div class="container"><header>
+<h1>wangjd&#39;s blog</h1>
+
+ <span class="version">Version 0.5.0</span>
+<a href="https://github.com/wantmoretime/wjdsite/" class="github"><i class="fab fa-github"></i></a>
+<p class="description">just learn more</p>
+
+</header>
+<div class="global-menu">
+<nav>
+<ul>
+<li><a href="/">Home</a></li></ul>
+</nav>
+</div>
+<div class="content-container">
+<main><h1>Github&#43;Hugo搭建个人博客网站</h1>
+<p>本篇blog主要介绍使用Github+hugo,简单搭建个人博客。</p>
+<h2 id="heading">前期准备</h2>
+<ul>
+<li>Git</li>
+<li>Go(go版本1.11以上)</li>
+</ul>
+<h2 id="hugowin10">hugo环境搭建（win10环境下）</h2>
+<p>版本下载路径：https://github.com/gohugoio/hugo/releases</p>
+<p>新建一个文件夹hugo，并将该文件夹路径添加到windows系统环境变量PATH下。</p>
+<p>下载需要的版本，解压到Hugo文件夹下即可，不需要安装。</p>
+<h2 id="hugo">hugo操作</h2>
+<p>使用window命令行cmd或git bash命令行工具进行操作都可以，下面以git bash操作为例。</p>
+<p><strong>创建新的静态网站</strong></p>
+<pre><code>hugo$ hugo new site new-site
+</code></pre><p>hugo文件夹下将新建一个new-site文件夹，里面包含的文件结构及作用:
+|- archetypes ：存放default.md，头文件格式
+|- content ：content目录存放博客文章（markdown文件）
+|- data ：存放自定义模版，导入的toml文件（或json，yaml）
+|- layouts ：layouts目录存放的是网站的模板文件
+|- static ：static目录存放图片，css等静态资源
+|- themes ：存放网站主题文件
+|- config.toml ：config.toml是网站的配置文件</p>
+<p>现在为网站添加一个主题，在hugo官网找一个想要的主题，然后克隆到hugo/new-site/theme文件夹下。</p>
+<p>比如添加的hugo-primer主题，在hugo/new-site/theme路径下执行:</p>
+<p><code>hugo/new-site/theme$ git clone https://github.com/qqhann/hugo-primer.git</code></p>
+<p>将主题添加到config配置文件中，在hugo/new-site路径下执行：</p>
+<p><code>hugo/new-site$ echo 'theme = &quot;hugo-primer&quot;' &gt;&gt; config.toml</code></p>
+<p><strong>创建自己的一个blog文件</strong></p>
+<p>在hugo路径下执行：<code>$ hugo new posts/first-post.md</code>，将在content的文件夹下生成posts文件夹及posts文件夹下first-post.md文件。</p>
+<p>编辑first-post.md文件，并去掉draft: true（草稿）这一行，否则在生成页面将被忽略，简单示例如下。</p>
+<pre><code>---
+title: &quot;First Post&quot;
+date: 2020-01-04T00:17:54+08:00
+---
+
+## Hello world
+</code></pre><p><strong>本地启动hugo服务</strong></p>
+<pre><code>hugo/new-site$ hugo server
+</code></pre><p>浏览器打开<code>http://localhost:1313</code>即可看到你的网页了。</p>
+<p><strong>hugo生成静态网页</strong></p>
+<pre><code>hugo/new-site$ hugo
+</code></pre><p>生成public文件夹，下面即包含你的静态网页，也就是待发布的网站内容。</p>
+<h2 id="github">Github发布静态网站</h2>
+<p>新建git仓库newsite.github.io，不要生成readme文件。</p>
+<p>下面在本地git进行操作</p>
+<pre><code class="language-git" data-lang="git">$ cd hugo/new-site/public  //进入待发布的文件夹下
+$ git init //(初始化git仓库)
+$ git add .
+$ git commit -m &quot;first commit&quot;
+$ git remote add origin https://github.com/newsite.github.io.git   //添加远程仓库
+$ git push -u origin master
+</code></pre><p>如果创建仓库时，生成其他文件，则需要先进行 <code>git pull origin master</code>下拉操作。</p>
+<p>在你的github页面上就可以看到推上去的文件了。</p>
+<p>在github上设置个人网站页如下：</p>
+<pre><code>github-&gt; setting -&gt; GitHub Pages -&gt; source
+选择master分支
+</code></pre><p>如果想要选择master/docs分支的话，需要你将本地整个新生成new-site文件夹全部推到github上，本地config.toml配置加一句<code>publishDir = &quot;docs&quot;</code>，让静态网页生成到docs文件夹下面。</p>
+<p>设置刷新后，你就可以在这个地方看到你个人的网站地址了。</p>
+<p>如果你本地配置文件config.toml中的baseURL值和你现在发布的URL不一致，修改配置文件的值，然后hugo一下，重新生成静态网页，重新push到github即可。</p>
+<p>现在，你就可以看到你自己的静态博客网页了！</p><div class="edit-meta">
+Last updated on 4 Jan 2020
+
+
+<br>
+Published on 4 Jan 2020
+<br><a href="https://github.com/wantmoretime/wjdsite//edit/master/content/go%5cGithub&#43;Hugo_build_myblog.md" class="edit-page"><i class="fas fa-pen-square"></i> Edit on GitHub</a></div><nav class="pagination"><a class="nav nav-prev" href="/go/github&#43;hugo_build_myblog/" title="Github&#43;Hugo搭建个人博客网站"><i class="fas fa-arrow-left" aria-hidden="true"></i> Prev - Github&#43;Hugo搭建个人博客网站</a>
+<a class="nav nav-next" href="/c&#43;&#43;/" title="C&#43;&#43;s">Next - C&#43;&#43;s <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+</nav><footer><p class="powered">Powered by <a href="https://gohugo.io">Hugo</a>. Theme by <a href="https://themes.gohugo.io/hugo-theme-techdoc/">TechDoc</a>. Designed by <a href="https://github.com/thingsym/hugo-theme-techdoc">Thingsym</a>.</p>
+</footer>
+</main><div class="sidebar">
+
+<nav class="open-menu">
+<ul>
+<li class=""><a href="https://example.com">Home</a></li>
+
+<li class=""><a href="/c&#43;&#43;/">C&#43;&#43;s</a>
+  
+<ul class="sub-menu">
+<li class=""><a href="/c&#43;&#43;/thread_lock/">线程锁</a></li>
+<li class=""><a href="/c&#43;&#43;/function_pointers/">C&#43;&#43;函数指针</a></li>
+<li class=""><a href="/c&#43;&#43;/emplace_back/">C&#43;&#43;11 emplace相关函数</a></li>
+</ul>
+  
+</li>
+
+<li class="parent"><a href="/go/">Gos</a>
+  
+<ul class="sub-menu">
+<li class="active"><a href="/go/github&#43;hugo_build_myblog/">Github&#43;Hugo搭建个人博客网站</a></li>
+</ul>
+  
+</li>
+
+<li class=""><a href="">Tools</a>
+  
+</li>
+</ul>
+</nav>
+
+
+
+<div class="sidebar-footer"></div>
+</div>
+</div><a href="#" id="backtothetop-fixed" class="backtothetop"
+ data-backtothetop-duration="600"
+ data-backtothetop-easing="easeOutQuart"
+ data-backtothetop-fixed-fadeIn="1000"
+ data-backtothetop-fixed-fadeOut="1000"
+ data-backtothetop-fixed-bottom="10"
+ data-backtothetop-fixed-right="20">
+<span class="fa-layers fa-fw">
+<i class="fas fa-circle"></i>
+<i class="fas fa-arrow-circle-up"></i>
+</span></a>
+</div>
+</body>
+</html>

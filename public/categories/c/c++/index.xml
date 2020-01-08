@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>C/C&#43;&#43; on Hugo Techdoc Theme</title>
+    <link>https://example.com/categories/c/c&#43;&#43;/</link>
+    <description>Recent content in C/C&#43;&#43; on Hugo Techdoc Theme</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 07 Jan 2020 14:42:34 +0800</lastBuildDate>
+    
+	<atom:link href="https://example.com/categories/c/c++/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>线程锁</title>
+      <link>https://example.com/c&#43;&#43;/thread_lock/</link>
+      <pubDate>Tue, 07 Jan 2020 14:42:34 +0800</pubDate>
+      
+      <guid>https://example.com/c&#43;&#43;/thread_lock/</guid>
+      <description>&lt;p&gt;多线程程序中，一般可能“同时发生多个写操作”或“同时发生读写操作”的情况时，必须加锁。如果只是同时发生多个读操作没有写操作的话，不需要加锁。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>C&#43;&#43;函数指针</title>
+      <link>https://example.com/c&#43;&#43;/function_pointers/</link>
+      <pubDate>Mon, 06 Jan 2020 20:38:00 +0800</pubDate>
+      
+      <guid>https://example.com/c&#43;&#43;/function_pointers/</guid>
+      <description>&lt;p&gt;C++函数指针以及map管理函数指针的应用&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>
