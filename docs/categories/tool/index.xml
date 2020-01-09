@@ -6,10 +6,19 @@
     <description>Recent content in tool on wangjd&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 04 Jan 2020 18:38:29 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 08 Jan 2020 21:16:30 +0800</lastBuildDate>
     
 	<atom:link href="https://wantmoretime.github.io/wjdsite/categories/tool/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>GDB调试</title>
+      <link>https://wantmoretime.github.io/wjdsite/tool/gdb/</link>
+      <pubDate>Wed, 08 Jan 2020 21:16:30 +0800</pubDate>
+      
+      <guid>https://wantmoretime.github.io/wjdsite/tool/gdb/</guid>
+      <description>&lt;p&gt;在Linux下开发C/C++程序，GDB调试的一项必须熟练掌握的技能，有助于DEBUG和提高开发效率。&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>Github&#43;Hugo搭建个人博客网站</title>

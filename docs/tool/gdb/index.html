@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>GDB调试 - wangjd&#39;s blog</title>
+<meta name="description" content="总结一下日常使用的GDB调试指令">
+<meta name="generator" content="Hugo 0.62.1" />
+<link href="https://wantmoretime.github.io/wjdsite/index.xml" rel="alternate" type="application/rss+xml">
+<link rel="canonical" href="https://wantmoretime.github.io/wjdsite/tool/gdb/">
+<link rel="stylesheet" href="https://wantmoretime.github.io/wjdsite/css/theme.min.css">
+<script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+<link rel="stylesheet" href="https://wantmoretime.github.io/wjdsite/css/chroma.min.css">
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery.easing@1.4.1/jquery.easing.min.js"></script>
+<script src="https://wantmoretime.github.io/wjdsite/js/bundle.js"></script><style>
+:root {}
+</style>
+<meta property="og:title" content="GDB调试" />
+<meta property="og:description" content="总结一下日常使用的GDB调试指令" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://wantmoretime.github.io/wjdsite/tool/gdb/" />
+<meta property="og:image" content="https://wantmoretime.github.io/wjdsite/og-image.png"/>
+<meta property="article:published_time" content="2020-01-08T21:16:30+08:00" />
+<meta property="article:modified_time" content="2020-01-08T21:16:30+08:00" /><meta property="og:site_name" content="Hugo Techdoc Theme" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://wantmoretime.github.io/wjdsite/og-image.png"/>
+
+<meta name="twitter:title" content="GDB调试"/>
+<meta name="twitter:description" content="总结一下日常使用的GDB调试指令"/>
+<meta itemprop="name" content="GDB调试">
+<meta itemprop="description" content="总结一下日常使用的GDB调试指令">
+<meta itemprop="datePublished" content="2020-01-08T21:16:30&#43;08:00" />
+<meta itemprop="dateModified" content="2020-01-08T21:16:30&#43;08:00" />
+<meta itemprop="wordCount" content="1523">
+<meta itemprop="image" content="https://wantmoretime.github.io/wjdsite/og-image.png"/>
+
+
+
+<meta itemprop="keywords" content="Linux,gdb," /></head>
+<body><div class="container"><header>
+<h1>wangjd&#39;s blog</h1>
+<a href="https://github.com/wantmoretime/wjdsite/" class="github"><i class="fab fa-github"></i></a>
+<p class="description">人一旦勇敢，就真正自由</p>
+
+</header>
+<div class="global-menu">
+<nav>
+<ul>
+<li><a href="/wjdsite/">Home</a></li></ul>
+</nav>
+</div>
+<div class="content-container">
+<main><h1>GDB调试</h1>
+<p>在Linux下开发C/C++程序，GDB调试的一项必须熟练掌握的技能，有助于DEBUG和提高开发效率。</p>
+<h2 id="heading">调试信息</h2>
+<p>​	一般要调试某个程序，为了能清晰地看到调试的每一行代码、调用的堆栈信息、变量名和函数名等信息，需要调试程序含有<strong>调试符号</strong>信息。因此在使用gcc/g++编译程序时，需要加上-g选项保留调试符号信息。</p>
+<p>​	一般在发布版本时，我们会选择去掉调试信息来减小程序大小和提高程序执行效率，除了不加-g选项，还可以通过strip命令来去除调试符号信息。</p>
+<h2 id="gdb">GDB启动</h2>
+<p>一般GDB启动有以下几种方式：</p>
+<ul>
+<li>gdb 文件名 （直接调试程序）</li>
+<li>gdb 文件名 core文件名（调试core文件）</li>
+<li>gdb attach <!-- raw HTML omitted -->  （调试已运行的程序）</li>
+</ul>
+<p>Linux系统默认不开启程序崩溃生成core文件，可以通过<code>ulimit 选项 设置值</code> 来修改设置。</p>
+<h2 id="gdb-1">GDB指令</h2>
+<h3 id="heading-1">常见的调试指令</h3>
+<table>
+<thead>
+<tr>
+<th>命令名称</th>
+<th>命令缩写</th>
+<th><strong>命令说明</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>run</td>
+<td>r</td>
+<td>运行一个程序</td>
+</tr>
+<tr>
+<td>continue</td>
+<td>c</td>
+<td>让暂停的程序继续运行</td>
+</tr>
+<tr>
+<td>next</td>
+<td>n</td>
+<td>运行到下一行</td>
+</tr>
+<tr>
+<td>step</td>
+<td>s</td>
+<td>如果有调用函数，进入调用的函数内部，相当于 step into</td>
+</tr>
+<tr>
+<td>until</td>
+<td>u</td>
+<td>运行到指定行停下来</td>
+</tr>
+<tr>
+<td>finish</td>
+<td>fi</td>
+<td>结束当前调用函数，到上一层函数调用处</td>
+</tr>
+<tr>
+<td>return</td>
+<td>return</td>
+<td>结束当前调用函数并返回指定值，到上一层函数调用处</td>
+</tr>
+<tr>
+<td>jump</td>
+<td>j</td>
+<td>将当前程序执行流跳转到指定行或地址</td>
+</tr>
+<tr>
+<td>print</td>
+<td>p</td>
+<td>打印变量或寄存器值</td>
+</tr>
+<tr>
+<td>backtrace</td>
+<td>bt</td>
+<td>查看当前线程的调用堆栈</td>
+</tr>
+<tr>
+<td>frame</td>
+<td>f</td>
+<td>切换到当前调用线程的指定堆栈，具体堆栈通过堆栈序号指定</td>
+</tr>
+<tr>
+<td>thread</td>
+<td>thread</td>
+<td>切换到指定线程</td>
+</tr>
+<tr>
+<td>break</td>
+<td>b</td>
+<td>添加断点</td>
+</tr>
+<tr>
+<td>tbreak</td>
+<td>tb</td>
+<td>添加临时断点</td>
+</tr>
+<tr>
+<td>delete</td>
+<td>del</td>
+<td>删除断点</td>
+</tr>
+<tr>
+<td>enable</td>
+<td>enable</td>
+<td>启用某个断点</td>
+</tr>
+<tr>
+<td>disable</td>
+<td>disable</td>
+<td>禁用某个断点</td>
+</tr>
+<tr>
+<td>watch</td>
+<td>watch</td>
+<td>监视某一个变量或内存地址的值是否发生变化</td>
+</tr>
+<tr>
+<td>list</td>
+<td>l</td>
+<td>显示源码</td>
+</tr>
+<tr>
+<td>info</td>
+<td>info</td>
+<td>查看断点 / 线程等信息</td>
+</tr>
+<tr>
+<td>ptype</td>
+<td>ptype</td>
+<td>查看变量类型</td>
+</tr>
+<tr>
+<td>disassemble</td>
+<td>dis</td>
+<td>查看汇编代码</td>
+</tr>
+<tr>
+<td>set args</td>
+<td></td>
+<td>设置程序启动命令行参数</td>
+</tr>
+<tr>
+<td>show args</td>
+<td></td>
+<td>查看设置的命令行参数</td>
+</tr>
+</tbody>
+</table>
+<h3 id="heading-2">指令使用</h3>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell"><span class="c1"># 设置程序启动命令行参数</span>
+<span class="o">(</span>gdb<span class="o">)</span> <span class="nb">set</span> args xxx.conf
+<span class="c1"># 查看设置的命令行参数</span>
+<span class="o">(</span>gdb<span class="o">)</span> show args
+<span class="c1"># 设置断点</span>
+<span class="o">(</span>gdb<span class="o">)</span> b main
+<span class="c1"># 显示断点</span>
+<span class="o">(</span>gdb<span class="o">)</span> info <span class="nb">break</span>
+<span class="c1"># 禁用断点</span>
+<span class="o">(</span>gdb<span class="o">)</span> disable  <span class="c1">#可添加断点编号</span>
+<span class="c1"># 启动断点</span>
+<span class="o">(</span>gdb<span class="o">)</span> <span class="nb">enable</span>   <span class="c1">#可添加断点编号</span>
+<span class="c1"># 删除断点</span>
+<span class="o">(</span>gdb<span class="o">)</span> delete   <span class="c1">#可添加断点编号</span>
+<span class="c1"># 运行程序</span>
+<span class="o">(</span>gdb<span class="o">)</span> run
+<span class="c1"># 程序中断时堆栈信息</span>
+<span class="o">(</span>gdb<span class="o">)</span> backtrace
+<span class="c1"># 堆栈编号切换</span>
+<span class="o">(</span>gdb<span class="o">)</span> frame &lt;n&gt;
+<span class="c1"># 查看线程信息</span>
+<span class="o">(</span>gdb<span class="o">)</span> info thread
+<span class="c1"># 线程切换</span>
+<span class="o">(</span>gdb<span class="o">)</span> thread <span class="m">2</span>
+<span class="c1"># 打印变量信息</span>
+<span class="o">(</span>gdb<span class="o">)</span> print &lt;var&gt;  <span class="c1">#可以是变量名var、变量地址&amp;var、或变量地址的内容*var等等</span>
+<span class="c1"># 查看变量类型</span>
+<span class="o">(</span>gdb<span class="o">)</span> ptype &lt;变量名&gt;
+<span class="c1"># 查看断点出程序代码</span>
+<span class="o">(</span>gdb<span class="o">)</span> list     <span class="c1">#+/-上下翻</span>
+<span class="c1"># 继续运行</span>
+<span class="o">(</span>gdb<span class="o">)</span> <span class="k">continue</span>
+<span class="c1"># 单步运行，深入程序内部逻辑</span>
+<span class="o">(</span>gdb<span class="o">)</span> step
+<span class="c1"># 单步运行，不进入函数</span>
+<span class="o">(</span>gdb<span class="o">)</span> next
+<span class="c1"># 运行到某一行</span>
+<span class="o">(</span>gdb<span class="o">)</span> <span class="k">until</span> <span class="m">100</span>
+<span class="c1"># 运行到函数结束</span>
+<span class="o">(</span>gdb<span class="o">)</span> finish  <span class="c1">#return 指令类似</span>
+<span class="c1"># 跳转到某一行，忽略中间过程，可能</span>
+<span class="o">(</span>gdb<span class="o">)</span> jump <span class="m">100</span>
+<span class="c1"># 监视一个变量或内存</span>
+<span class="o">(</span>gdb<span class="o">)</span> watch &lt;变量名或内存地址&gt;
+<span class="c1"># 设置中断时自动打印变量值</span>
+<span class="o">(</span>gdb<span class="o">)</span> display &lt;变量名&gt;
+<span class="c1"># 删除display的变量</span>
+<span class="o">(</span>gdb<span class="o">)</span> delete display
+<span class="c1"># 设置临时断点</span>
+<span class="o">(</span>gdb<span class="o">)</span> tbreak main
+</code></pre></div><p>一般使用时，在程序运行前设置好运行参数和需要打印或监视的变量，打好断点，运行程序，查看中断处的堆栈信息、线程状况、变量值是否符号预期，然后继续运行调试。对于一些疑难杂症需要深入挖掘GDB其他调试功能来解决。</p>
+<h3 id="heading-3">其他设置</h3>
+<p>打印设置</p>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell"><span class="o">(</span>gdb<span class="o">)</span> <span class="nb">help</span> <span class="nb">set</span> print  <span class="c1">#显示所有print提供设置选项</span>
+<span class="o">(</span>gdb<span class="o">)</span> <span class="nb">set</span> print element <span class="m">0</span>  <span class="c1">#取消打印长度限制。默认200</span>
+<span class="o">(</span>gdb<span class="o">)</span> <span class="nb">set</span> print object on/off<span class="o">(</span>默认<span class="o">)</span> <span class="c1">#如果打开打印其真实的类型，而不是声明的类型</span>
+<span class="o">(</span>gdb<span class="o">)</span> <span class="nb">set</span> print pretty on/off<span class="o">(</span>默认<span class="o">)</span> <span class="c1">#是否以更换行缩进的方式打印结构体，或者类</span>
+<span class="o">(</span>gdb<span class="o">)</span> <span class="nb">set</span> print address on/off   <span class="c1">#打开(默认)/关闭打印地址</span>
+<span class="o">(</span>gdb<span class="o">)</span> <span class="nb">set</span> print static-member on<span class="o">(</span>默认<span class="o">)</span>/off <span class="c1">#是否打印静态数据成员</span>
+<span class="o">(</span>gdb<span class="o">)</span> <span class="nb">set</span> print thread-events on<span class="o">(</span>默认<span class="o">)</span>/off <span class="c1">#当程序启动或者线程退出时打印信息</span>
+<span class="o">(</span>gdb<span class="o">)</span> <span class="nb">set</span> print array-indexes on/off  <span class="c1">#打开/关闭(默认) 显示数组index</span>
+<span class="o">(</span>gdb<span class="o">)</span> <span class="nb">set</span> print frame-arguments  all/scalars<span class="o">(</span>默认<span class="o">)</span>/none <span class="c1">#在打印堆栈帧(bt)的时候显示参数的方式</span>
+...
+</code></pre></div><p>条件断点</p>
+<pre><code>break [lineNo] if [condition]
+</code></pre><p>lineNo 是程序触发断点后需要停下的位置，condition 是断点触发的条件</p>
+<p>多进程调试切换</p>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell"><span class="o">(</span>gdb<span class="o">)</span> show follow-fork-mode    <span class="c1">#  选择调试父进程还是子进程</span>
+<span class="o">(</span>gdb<span class="o">)</span> show follow-fork-mode  parent
+<span class="o">(</span>gdb<span class="o">)</span> show follow-fork-mode  child
+</code></pre></div><p>多线程调试锁定线程</p>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell"><span class="o">(</span>gdb<span class="o">)</span> <span class="nb">set</span> scheduler-locking on/off <span class="c1"># 调试时设置，可以锁定当前调试线</span>
+</code></pre></div><div class="edit-meta">
+Last updated on 8 Jan 2020
+
+
+<br>
+Published on 8 Jan 2020
+<br><a href="https://github.com/wantmoretime/wjdsite//edit/master/content/tool%5cgdb.md" class="edit-page"><i class="fas fa-pen-square"></i> Edit on GitHub</a></div><nav class="pagination"><a class="nav nav-prev" href="/wjdsite/tool/" title="TOOL"><i class="fas fa-arrow-left" aria-hidden="true"></i> Prev - TOOL</a>
+<a class="nav nav-next" href="/wjdsite/c&#43;&#43;/" title="C&#43;&#43;">Next - C&#43;&#43; <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+</nav><footer><p class="powered">Powered by <a href="https://gohugo.io">Hugo</a>. Theme by <a href="https://themes.gohugo.io/hugo-theme-techdoc/">TechDoc</a>. Designed by <a href="https://github.com/thingsym/hugo-theme-techdoc">Thingsym</a>.</p>
+</footer>
+</main><div class="sidebar">
+
+<nav class="open-menu">
+<ul>
+<li class=""><a href="https://wantmoretime.github.io/wjdsite/">Home</a></li>
+
+<li class=""><a href="/wjdsite/c&#43;&#43;/">C&#43;&#43;</a>
+  
+<ul class="sub-menu">
+<li class=""><a href="/wjdsite/c&#43;&#43;/c&#43;&#43;_sington_template/">C&#43;&#43;单例模式</a></li>
+<li class=""><a href="/wjdsite/c&#43;&#43;/thread_lock/">线程锁</a></li>
+<li class=""><a href="/wjdsite/c&#43;&#43;/function_pointers/">C&#43;&#43;函数指针</a></li>
+<li class=""><a href="/wjdsite/c&#43;&#43;/emplace_back/">C&#43;&#43;11 emplace相关函数</a></li>
+</ul>
+  
+</li>
+
+<li class=""><a href="/wjdsite/go/">GO</a>
+  
+<ul class="sub-menu">
+<li class=""><a href="/wjdsite/go/github&#43;hugo_build_myblog/">Github&#43;Hugo搭建个人博客网站</a></li>
+</ul>
+  
+</li>
+
+<li class="parent"><a href="/wjdsite/tool/">TOOL</a>
+  
+<ul class="sub-menu">
+<li class="active"><a href="/wjdsite/tool/gdb/">GDB调试</a></li>
+</ul>
+  
+</li>
+</ul>
+</nav>
+
+
+
+<div class="sidebar-footer"></div>
+</div>
+</div><a href="#" id="backtothetop-fixed" class="backtothetop"
+ data-backtothetop-duration="600"
+ data-backtothetop-easing="easeOutQuart"
+ data-backtothetop-fixed-fadeIn="1000"
+ data-backtothetop-fixed-fadeOut="1000"
+ data-backtothetop-fixed-bottom="10"
+ data-backtothetop-fixed-right="20">
+<span class="fa-layers fa-fw">
+<i class="fas fa-circle"></i>
+<i class="fas fa-arrow-circle-up"></i>
+</span></a>
+</div>
+</body>
+</html>

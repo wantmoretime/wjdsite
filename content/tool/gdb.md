@@ -1,7 +1,7 @@
 ---
 title: "GDB调试"
 date: 2020-01-08T21:16:30+08:00
-draft: true
+draft: false
 description: "总结一下日常使用的GDB调试指令"
 tags: 
  - Linux
@@ -120,5 +120,44 @@ Linux系统默认不开启程序崩溃生成core文件，可以通过`ulimit 选
 (gdb) tbreak main
 ```
 
-一般使用时，在程序运行前设置好运行参数和需要打印或监视的变量，打好断点，运行程序，查看中断处的堆栈信息、线程状况、变量值是否符号预期，然后继续运行调试。这样能解决大部分问题，但是对于一些疑难杂症需要深入挖掘GDB其他调试功能来解决。
+一般使用时，在程序运行前设置好运行参数和需要打印或监视的变量，打好断点，运行程序，查看中断处的堆栈信息、线程状况、变量值是否符号预期，然后继续运行调试。对于一些疑难杂症需要深入挖掘GDB其他调试功能来解决。
+
+### 其他设置
+
+打印设置
+
+```shell
+(gdb) help set print  #显示所有print提供设置选项
+(gdb) set print element 0  #取消打印长度限制。默认200
+(gdb) set print object on/off(默认) #如果打开打印其真实的类型，而不是声明的类型
+(gdb) set print pretty on/off(默认) #是否以更换行缩进的方式打印结构体，或者类
+(gdb) set print address on/off   #打开(默认)/关闭打印地址
+(gdb) set print static-member on(默认)/off #是否打印静态数据成员
+(gdb) set print thread-events on(默认)/off #当程序启动或者线程退出时打印信息
+(gdb) set print array-indexes on/off  #打开/关闭(默认) 显示数组index
+(gdb) set print frame-arguments  all/scalars(默认)/none #在打印堆栈帧(bt)的时候显示参数的方式
+...
+```
+
+条件断点
+
+```
+break [lineNo] if [condition]
+```
+
+lineNo 是程序触发断点后需要停下的位置，condition 是断点触发的条件
+
+多进程调试切换
+
+```shell
+(gdb) show follow-fork-mode    #  选择调试父进程还是子进程
+(gdb) show follow-fork-mode  parent
+(gdb) show follow-fork-mode  child
+```
+
+多线程调试锁定线程
+
+```shell
+(gdb) set scheduler-locking on/off # 调试时设置，可以锁定当前调试线
+```
 
