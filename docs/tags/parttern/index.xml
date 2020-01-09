@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>parttern on wangjd&#39;s blog</title>
+    <link>https://wantmoretime.github.io/wjdsite/tags/parttern/</link>
+    <description>Recent content in parttern on wangjd&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 09 Jan 2020 11:40:27 +0800</lastBuildDate>
+    
+	<atom:link href="https://wantmoretime.github.io/wjdsite/tags/parttern/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>C&#43;&#43;单例模式</title>
+      <link>https://wantmoretime.github.io/wjdsite/c&#43;&#43;/c&#43;&#43;_sington_template/</link>
+      <pubDate>Thu, 09 Jan 2020 11:40:27 +0800</pubDate>
+      
+      <guid>https://wantmoretime.github.io/wjdsite/c&#43;&#43;/c&#43;&#43;_sington_template/</guid>
+      <description>单例模式 单例模式用于保证系统里面一个类最多只能存在一个实例，例如缓冲池、数据库连接池、线程池、应用服务实例等。 饿汉式 class Singleton { public: static Singleton &amp;amp;get_instance() { static Singleton instance; return</description>
+    </item>
+    
+  </channel>
+</rss>

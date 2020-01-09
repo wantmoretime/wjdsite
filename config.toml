@@ -19,7 +19,7 @@ enableMissingTranslationPlaceholders = false
 [Params]
 
     # Souce Code repository section
-    description = "Just learn more"
+    description = "人一旦勇敢，就真正自由"
     github_repository = "https://github.com/wantmoretime/wjdsite/"
     #version = "0.5.0"
 
@@ -71,3 +71,5 @@ enableMissingTranslationPlaceholders = false
 #    name = "Twitter"
 #    url = "https://twitter.com/thingsym"
 #    weight = 2
+
+copyright = "&copy;wangjd 2020"

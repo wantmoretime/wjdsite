@@ -12,6 +12,15 @@
     
     
     <item>
+      <title>C&#43;&#43;单例模式</title>
+      <link>https://wantmoretime.github.io/wjdsite/c&#43;&#43;/c&#43;&#43;_sington_template/</link>
+      <pubDate>Thu, 09 Jan 2020 11:40:27 +0800</pubDate>
+      
+      <guid>https://wantmoretime.github.io/wjdsite/c&#43;&#43;/c&#43;&#43;_sington_template/</guid>
+      <description>单例模式 单例模式用于保证系统里面一个类最多只能存在一个实例，例如缓冲池、数据库连接池、线程池、应用服务实例等。 饿汉式 class Singleton { public: static Singleton &amp;amp;get_instance() { static Singleton instance; return</description>
+    </item>
+    
+    <item>
       <title>线程锁</title>
       <link>https://wantmoretime.github.io/wjdsite/c&#43;&#43;/thread_lock/</link>
       <pubDate>Tue, 07 Jan 2020 14:42:34 +0800</pubDate>
