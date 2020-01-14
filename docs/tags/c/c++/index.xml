@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>c/C&#43;&#43; on wangjd&#39;s blog</title>
+    <link>https://wantmoretime.github.io/wjdsite/tags/c/c&#43;&#43;/</link>
+    <description>Recent content in c/C&#43;&#43; on wangjd&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 10 Jan 2020 14:31:16 +0800</lastBuildDate>
+    
+	<atom:link href="https://wantmoretime.github.io/wjdsite/tags/c/c++/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>C/C&#43;&#43;读写文件</title>
+      <link>https://wantmoretime.github.io/wjdsite/c&#43;&#43;/rw_file/</link>
+      <pubDate>Fri, 10 Jan 2020 14:31:16 +0800</pubDate>
+      
+      <guid>https://wantmoretime.github.io/wjdsite/c&#43;&#43;/rw_file/</guid>
+      <description>C/C++读写文件操作 最近需要在arm_linux环境编译运行程序，许多c++特性用不了，重新回顾一下c/c++的知识。 读写文件 #include &amp;lt;stdio.h&amp;gt;#include &amp;lt;stdlib.h&amp;gt;#include &amp;lt;string&amp;gt;#include &amp;lt;iostream&amp;gt;using namespace</description>
+    </item>
+    
+  </channel>
+</rss>

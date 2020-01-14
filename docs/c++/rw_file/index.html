@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>C/C&#43;&#43;读写文件 - wangjd&#39;s blog</title>
+<meta name="description" content="C/c&#43;&#43;">
+<meta name="generator" content="Hugo 0.62.1" />
+<link href="https://wantmoretime.github.io/wjdsite/index.xml" rel="alternate" type="application/rss+xml">
+<link rel="canonical" href="https://wantmoretime.github.io/wjdsite/c&#43;&#43;/rw_file/">
+<link rel="stylesheet" href="https://wantmoretime.github.io/wjdsite/css/theme.min.css">
+<script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+<link rel="stylesheet" href="https://wantmoretime.github.io/wjdsite/css/chroma.min.css">
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery.easing@1.4.1/jquery.easing.min.js"></script>
+<script src="https://wantmoretime.github.io/wjdsite/js/bundle.js"></script><style>
+:root {}
+</style>
+<meta property="og:title" content="C/C&#43;&#43;读写文件" />
+<meta property="og:description" content="C/c&#43;&#43;" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://wantmoretime.github.io/wjdsite/c&#43;&#43;/rw_file/" />
+<meta property="og:image" content="https://wantmoretime.github.io/wjdsite/og-image.png"/>
+<meta property="article:published_time" content="2020-01-10T14:31:16+08:00" />
+<meta property="article:modified_time" content="2020-01-10T14:31:16+08:00" /><meta property="og:site_name" content="Hugo Techdoc Theme" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://wantmoretime.github.io/wjdsite/og-image.png"/>
+
+<meta name="twitter:title" content="C/C&#43;&#43;读写文件"/>
+<meta name="twitter:description" content="C/c&#43;&#43;"/>
+<meta itemprop="name" content="C/C&#43;&#43;读写文件">
+<meta itemprop="description" content="C/c&#43;&#43;">
+<meta itemprop="datePublished" content="2020-01-10T14:31:16&#43;08:00" />
+<meta itemprop="dateModified" content="2020-01-10T14:31:16&#43;08:00" />
+<meta itemprop="wordCount" content="306">
+<meta itemprop="image" content="https://wantmoretime.github.io/wjdsite/og-image.png"/>
+
+
+
+<meta itemprop="keywords" content="c/C&#43;&#43;,linux," /></head>
+<body><div class="container"><header>
+<h1>wangjd&#39;s blog</h1>
+<a href="https://github.com/wantmoretime/wjdsite/" class="github"><i class="fab fa-github"></i></a>
+<p class="description">人一旦勇敢，就真正自由</p>
+
+</header>
+<div class="global-menu">
+<nav>
+<ul>
+<li><a href="/wjdsite/">Home</a></li></ul>
+</nav>
+</div>
+<div class="content-container">
+<main><h1>C/C&#43;&#43;读写文件</h1>
+<h2 id="cc">C/C++读写文件操作</h2>
+<p>最近需要在arm_linux环境编译运行程序，许多c++特性用不了，重新回顾一下c/c++的知识。</p>
+<h3 id="heading">读写文件</h3>
+<div class="highlight"><pre class="chroma"><code class="language-c++" data-lang="c++"><span class="cp">#</span><span class="cp">include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp">
+</span><span class="cp"></span><span class="cp">#</span><span class="cp">include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp">
+</span><span class="cp"></span><span class="cp">#</span><span class="cp">include</span> <span class="cpf">&lt;string&gt;</span><span class="cp">
+</span><span class="cp"></span><span class="cp">#</span><span class="cp">include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span><span class="cp"></span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="cp">#</span><span class="cp">define RFILENAME &#34;1.txt&#34;</span><span class="cp">
+</span><span class="cp"></span><span class="cp">#</span><span class="cp">define WFILENAME &#34;2.txt&#34;</span><span class="cp">
+</span><span class="cp"></span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="p">)</span>
+<span class="p">{</span>
+    	<span class="c1">//读文件
+</span><span class="c1"></span>        <span class="n">FILE</span> <span class="o">*</span><span class="n">fd</span> <span class="o">=</span> <span class="n">fopen</span><span class="p">(</span><span class="n">RFILENAME</span><span class="p">,</span><span class="sa"></span><span class="s">&#34;</span><span class="s">r</span><span class="s">&#34;</span><span class="p">)</span><span class="p">;</span>   <span class="c1">//返回FILE对象指针，指向RFILENAME
+</span><span class="c1"></span>		<span class="c1">//文件的开头:SEEK_SET 
+</span><span class="c1"></span>    	<span class="c1">//文件指针的当前位置:SEEK_CUR
+</span><span class="c1"></span>    	<span class="c1">//文件的末尾:SEEK_END
+</span><span class="c1"></span>        <span class="n">fseek</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span><span class="mi">0L</span><span class="p">,</span><span class="n">SEEK_END</span><span class="p">)</span><span class="p">;</span>   <span class="c1">//文件指针偏移到文件末尾
+</span><span class="c1"></span>        <span class="kt">int</span> <span class="n">size</span> <span class="o">=</span> <span class="n">ftell</span><span class="p">(</span><span class="n">fd</span><span class="p">)</span><span class="p">;</span>    <span class="c1">//返回当前文件位置
+</span><span class="c1"></span>        <span class="n">rewind</span><span class="p">(</span><span class="n">fd</span><span class="p">)</span><span class="p">;</span>              <span class="c1">//需要将文件指针指向文件开头
+</span><span class="c1"></span>
+        <span class="kt">char</span><span class="o">*</span> <span class="n">buff</span> <span class="o">=</span> <span class="p">(</span><span class="kt">char</span><span class="o">*</span><span class="p">)</span><span class="n">malloc</span><span class="p">(</span><span class="n">size</span><span class="p">)</span><span class="p">;</span>
+        <span class="n">fread</span><span class="p">(</span><span class="n">buff</span><span class="p">,</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">char</span><span class="p">)</span><span class="p">,</span><span class="n">size</span><span class="p">,</span><span class="n">fd</span><span class="p">)</span><span class="p">;</span>    <span class="c1">//读文件，每次读sizeof(char)个，读size次
+</span><span class="c1"></span>    	<span class="n">string</span> <span class="n">str</span><span class="o">=</span><span class="n">buff</span><span class="p">;</span>
+        <span class="n">cout</span><span class="o">&lt;</span><span class="o">&lt;</span><span class="n">buff</span><span class="o">&lt;</span><span class="o">&lt;</span><span class="n">endl</span><span class="p">;</span>
+        <span class="n">fclose</span><span class="p">(</span><span class="n">fd</span><span class="p">)</span><span class="p">;</span>              <span class="c1">//关闭文件
+</span><span class="c1"></span>        <span class="n">free</span><span class="p">(</span><span class="n">buff</span><span class="p">)</span><span class="p">;</span>
+    
+    	<span class="c1">//写文件
+</span><span class="c1"></span>    	<span class="n">FILE</span> <span class="o">*</span><span class="n">fw</span> <span class="o">=</span> <span class="n">fopen</span><span class="p">(</span><span class="n">WFILENAME</span><span class="p">,</span><span class="sa"></span><span class="s">&#34;</span><span class="s">a</span><span class="s">&#34;</span><span class="p">)</span><span class="p">;</span>   <span class="c1">//打开或新建一个文件，在末尾追加写
+</span><span class="c1"></span>    	<span class="n">fwrite</span><span class="p">(</span><span class="n">str</span><span class="p">.</span><span class="n">c_str</span><span class="p">(</span><span class="p">)</span><span class="p">,</span><span class="n">str</span><span class="p">.</span><span class="n">length</span><span class="p">(</span><span class="p">)</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">fw</span><span class="p">)</span><span class="p">;</span>   <span class="c1">//str.c_str()传入字符串首地址
+</span><span class="c1"></span>    	<span class="n">fclose</span><span class="p">(</span><span class="n">fw</span><span class="p">)</span><span class="p">;</span>
+    
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+</code></pre></div><div class="edit-meta">
+Last updated on 10 Jan 2020
+
+
+<br>
+Published on 10 Jan 2020
+<br><a href="https://github.com/wantmoretime/wjdsite//edit/master/content/C&#43;&#43;%5crw_file.md" class="edit-page"><i class="fas fa-pen-square"></i> Edit on GitHub</a></div><nav class="pagination"><a class="nav nav-prev" href="/wjdsite/c&#43;&#43;/" title="C&#43;&#43;"><i class="fas fa-arrow-left" aria-hidden="true"></i> Prev - C&#43;&#43;</a>
+<a class="nav nav-next" href="/wjdsite/c&#43;&#43;/c&#43;&#43;_sington_template/" title="C&#43;&#43;单例模式">Next - C&#43;&#43;单例模式 <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+</nav><footer><p class="powered">Powered by <a href="https://gohugo.io">Hugo</a>. Theme by <a href="https://themes.gohugo.io/hugo-theme-techdoc/">TechDoc</a>. Designed by <a href="https://github.com/thingsym/hugo-theme-techdoc">Thingsym</a>.</p>
+</footer>
+</main><div class="sidebar">
+
+<nav class="open-menu">
+<ul>
+<li class=""><a href="https://wantmoretime.github.io/wjdsite/">Home</a></li>
+
+<li class=""><a href="/wjdsite/network/">NETWORK</a>
+  
+</li>
+
+<li class=""><a href="/wjdsite/protocols/">PROTOCOLS</a>
+  
+</li>
+
+<li class="parent"><a href="/wjdsite/c&#43;&#43;/">C&#43;&#43;</a>
+  
+<ul class="sub-menu">
+<li class="active"><a href="/wjdsite/c&#43;&#43;/rw_file/">C/C&#43;&#43;读写文件</a></li>
+<li class=""><a href="/wjdsite/c&#43;&#43;/c&#43;&#43;_sington_template/">C&#43;&#43;单例模式</a></li>
+<li class=""><a href="/wjdsite/c&#43;&#43;/thread_lock/">线程锁</a></li>
+<li class=""><a href="/wjdsite/c&#43;&#43;/function_pointers/">C&#43;&#43;函数指针</a></li>
+<li class=""><a href="/wjdsite/c&#43;&#43;/emplace_back/">C&#43;&#43;11 emplace相关函数</a></li>
+</ul>
+  
+</li>
+
+<li class=""><a href="/wjdsite/go/">GO</a>
+  
+<ul class="sub-menu">
+<li class=""><a href="/wjdsite/go/github&#43;hugo_build_myblog/">Github&#43;Hugo搭建个人博客网站</a></li>
+</ul>
+  
+</li>
+
+<li class=""><a href="/wjdsite/tool/">TOOL</a>
+  
+<ul class="sub-menu">
+<li class=""><a href="/wjdsite/tool/docker/">docker简单使用</a></li>
+<li class=""><a href="/wjdsite/tool/gdb/">GDB调试</a></li>
+</ul>
+  
+</li>
+</ul>
+</nav>
+
+
+
+<div class="sidebar-footer"></div>
+</div>
+</div><a href="#" id="backtothetop-fixed" class="backtothetop"
+ data-backtothetop-duration="600"
+ data-backtothetop-easing="easeOutQuart"
+ data-backtothetop-fixed-fadeIn="1000"
+ data-backtothetop-fixed-fadeOut="1000"
+ data-backtothetop-fixed-bottom="10"
+ data-backtothetop-fixed-right="20">
+<span class="fa-layers fa-fw">
+<i class="fas fa-circle"></i>
+<i class="fas fa-arrow-circle-up"></i>
+</span></a>
+</div>
+</body>
+</html>

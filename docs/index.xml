@@ -12,6 +12,24 @@
     
     
     <item>
+      <title>docker简单使用</title>
+      <link>https://wantmoretime.github.io/wjdsite/tool/docker/</link>
+      <pubDate>Tue, 14 Jan 2020 17:25:08 +0800</pubDate>
+      
+      <guid>https://wantmoretime.github.io/wjdsite/tool/docker/</guid>
+      <description>&lt;p&gt;docker的一次简单使用&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>C/C&#43;&#43;读写文件</title>
+      <link>https://wantmoretime.github.io/wjdsite/c&#43;&#43;/rw_file/</link>
+      <pubDate>Fri, 10 Jan 2020 14:31:16 +0800</pubDate>
+      
+      <guid>https://wantmoretime.github.io/wjdsite/c&#43;&#43;/rw_file/</guid>
+      <description>C/C++读写文件操作 最近需要在arm_linux环境编译运行程序，许多c++特性用不了，重新回顾一下c/c++的知识。 读写文件 #include &amp;lt;stdio.h&amp;gt;#include &amp;lt;stdlib.h&amp;gt;#include &amp;lt;string&amp;gt;#include &amp;lt;iostream&amp;gt;using namespace</description>
+    </item>
+    
+    <item>
       <title>C&#43;&#43;单例模式</title>
       <link>https://wantmoretime.github.io/wjdsite/c&#43;&#43;/c&#43;&#43;_sington_template/</link>
       <pubDate>Thu, 09 Jan 2020 11:40:27 +0800</pubDate>

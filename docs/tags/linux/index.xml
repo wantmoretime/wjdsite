@@ -1,15 +1,33 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Linux on wangjd&#39;s blog</title>
+    <title>linux on wangjd&#39;s blog</title>
     <link>https://wantmoretime.github.io/wjdsite/tags/linux/</link>
-    <description>Recent content in Linux on wangjd&#39;s blog</description>
+    <description>Recent content in linux on wangjd&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 08 Jan 2020 21:16:30 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 14 Jan 2020 17:25:08 +0800</lastBuildDate>
     
 	<atom:link href="https://wantmoretime.github.io/wjdsite/tags/linux/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>docker简单使用</title>
+      <link>https://wantmoretime.github.io/wjdsite/tool/docker/</link>
+      <pubDate>Tue, 14 Jan 2020 17:25:08 +0800</pubDate>
+      
+      <guid>https://wantmoretime.github.io/wjdsite/tool/docker/</guid>
+      <description>&lt;p&gt;docker的一次简单使用&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>C/C&#43;&#43;读写文件</title>
+      <link>https://wantmoretime.github.io/wjdsite/c&#43;&#43;/rw_file/</link>
+      <pubDate>Fri, 10 Jan 2020 14:31:16 +0800</pubDate>
+      
+      <guid>https://wantmoretime.github.io/wjdsite/c&#43;&#43;/rw_file/</guid>
+      <description>C/C++读写文件操作 最近需要在arm_linux环境编译运行程序，许多c++特性用不了，重新回顾一下c/c++的知识。 读写文件 #include &amp;lt;stdio.h&amp;gt;#include &amp;lt;stdlib.h&amp;gt;#include &amp;lt;string&amp;gt;#include &amp;lt;iostream&amp;gt;using namespace</description>
+    </item>
     
     <item>
       <title>GDB调试</title>
