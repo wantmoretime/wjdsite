@@ -32,7 +32,11 @@ Docker 容器通过 Docker 镜像来创建。
 
 容器与镜像的关系类似于面向对象编程中的对象与类。
 
-![](https://github.com/wantmoretime/wjdsite/tree/master/images/images/docker_2.png)
+docker命令：
+
+![image](https://raw.githubusercontent.com/wantmoretime/wjdsite/master/images/images/docker_1.jpg)
+
+
 
 ### 安装启动
 
