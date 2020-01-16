@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>缓存队列 on wangjd&#39;s blog</title>
+    <link>https://wantmoretime.github.io/wjdsite/tags/%E7%BC%93%E5%AD%98%E9%98%9F%E5%88%97/</link>
+    <description>Recent content in 缓存队列 on wangjd&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 15 Jan 2020 10:38:08 +0800</lastBuildDate>
+    
+	<atom:link href="https://wantmoretime.github.io/wjdsite/tags/%E7%BC%93%E5%AD%98%E9%98%9F%E5%88%97/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>缓存队列</title>
+      <link>https://wantmoretime.github.io/wjdsite/c&#43;&#43;/cache_queue/</link>
+      <pubDate>Wed, 15 Jan 2020 10:38:08 +0800</pubDate>
+      
+      <guid>https://wantmoretime.github.io/wjdsite/c&#43;&#43;/cache_queue/</guid>
+      <description>&lt;p&gt;使用缓存队列接收消息，避免高并发时消息漏接丢失的情况，提供一种消息缓冲的机制，还可以将消息进行统一分发处理，方便管理。&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>

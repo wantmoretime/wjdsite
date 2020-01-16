@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>缓存队列 - wangjd&#39;s blog</title>
+<meta name="description" content="缓存队列">
+<meta name="generator" content="Hugo 0.62.1" />
+<link href="https://wantmoretime.github.io/wjdsite/index.xml" rel="alternate" type="application/rss+xml">
+<link rel="canonical" href="https://wantmoretime.github.io/wjdsite/c&#43;&#43;/cache_queue/">
+<link rel="stylesheet" href="https://wantmoretime.github.io/wjdsite/css/theme.min.css">
+<script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+<link rel="stylesheet" href="https://wantmoretime.github.io/wjdsite/css/chroma.min.css">
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery.easing@1.4.1/jquery.easing.min.js"></script>
+<script src="https://wantmoretime.github.io/wjdsite/js/bundle.js"></script><style>
+:root {}
+</style>
+<meta property="og:title" content="缓存队列" />
+<meta property="og:description" content="缓存队列" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://wantmoretime.github.io/wjdsite/c&#43;&#43;/cache_queue/" />
+<meta property="og:image" content="https://wantmoretime.github.io/wjdsite/og-image.png"/>
+<meta property="article:published_time" content="2020-01-15T10:38:08+08:00" />
+<meta property="article:modified_time" content="2020-01-15T10:38:08+08:00" /><meta property="og:site_name" content="Hugo Techdoc Theme" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://wantmoretime.github.io/wjdsite/og-image.png"/>
+
+<meta name="twitter:title" content="缓存队列"/>
+<meta name="twitter:description" content="缓存队列"/>
+<meta itemprop="name" content="缓存队列">
+<meta itemprop="description" content="缓存队列">
+<meta itemprop="datePublished" content="2020-01-15T10:38:08&#43;08:00" />
+<meta itemprop="dateModified" content="2020-01-15T10:38:08&#43;08:00" />
+<meta itemprop="wordCount" content="819">
+<meta itemprop="image" content="https://wantmoretime.github.io/wjdsite/og-image.png"/>
+
+
+
+<meta itemprop="keywords" content="C&#43;&#43;,缓存队列," /></head>
+<body><div class="container"><header>
+<h1>wangjd&#39;s blog</h1>
+<a href="https://github.com/wantmoretime/wjdsite/" class="github"><i class="fab fa-github"></i></a>
+<p class="description">人一旦勇敢，就真正自由</p>
+
+</header>
+<div class="global-menu">
+<nav>
+<ul>
+<li><a href="/wjdsite/">Home</a></li></ul>
+</nav>
+</div>
+<div class="content-container">
+<main><h1>缓存队列</h1>
+<p>使用缓存队列接收消息，避免高并发时消息漏接丢失的情况，提供一种消息缓冲的机制，还可以将消息进行统一分发处理，方便管理。</p>
+<p>缓存队列是用来存放消息的数据结构，使用队列可以保证消息按接收先后顺序进行处理，对消息并发做个缓冲。在大型系统中，经常会用到消息队列来缓解系统压力或进行系统解耦，这里考虑到只是一个小型服务采用了一个简单的缓存队列来解决一下可能的发生并发问题，和业务分发管理。</p>
+<p>C++实现的缓存队列类模板，包含：</p>
+<ul>
+<li>
+<p>消息存放的数据结构</p>
+</li>
+<li>
+<p>线程循环读取消息处理</p>
+</li>
+<li>
+<p>接收消息的函数</p>
+</li>
+<li>
+<p>互斥锁</p>
+</li>
+</ul>
+<p>传入消息类型Message（如下为包含一个int类型的消息类别，一个string类型的消息数据），保存在一个set集合里面。</p>
+<div class="highlight"><pre class="chroma"><code class="language-c++" data-lang="c++"><span class="cp">#</span><span class="cp">include</span> <span class="cpf">&lt;set&gt;</span><span class="cp">
+</span><span class="cp"></span><span class="cp">#</span><span class="cp">include</span> <span class="cpf">&lt;stdint.h&gt;</span><span class="cp">
+</span><span class="cp"></span><span class="cp">#</span><span class="cp">include</span> <span class="cpf">&lt;string&gt;</span><span class="cp">
+</span><span class="cp"></span><span class="cp">#</span><span class="cp">include</span> <span class="cpf">&lt;pthread.h&gt;</span><span class="cp">
+</span><span class="cp"></span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">__R</span><span class="o">&gt;</span>
+<span class="k">class</span> <span class="nc">MessageQueue</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="k">struct</span> <span class="nc">Message</span><span class="p">;</span>
+	 <span class="c1">//函数指针，用于消息处理函数，调用时实现
+</span><span class="c1"></span>	<span class="k">typedef</span> <span class="nf">__R</span><span class="p">(</span><span class="o">*</span><span class="n">Handler</span><span class="p">)</span><span class="p">(</span><span class="n">Message</span><span class="o">&amp;</span> <span class="n">msg</span><span class="p">,</span><span class="kt">void</span><span class="o">*</span> <span class="n">opaque</span><span class="p">)</span><span class="p">;</span> 
+	<span class="c1">//构造函数，设置好回调的消息处理函数
+</span><span class="c1"></span>	<span class="n">MessageQueue</span><span class="p">(</span><span class="n">Handler</span> <span class="n">handler</span><span class="p">,</span> <span class="kt">void</span><span class="o">*</span> <span class="n">opaque</span><span class="p">)</span> <span class="o">:</span> <span class="n">_handler</span><span class="p">(</span><span class="n">handler</span><span class="p">)</span><span class="p">,</span> <span class="n">_opaque</span><span class="p">(</span><span class="n">opaque</span><span class="p">)</span> 
+	<span class="p">{</span>
+		<span class="c1">//初始化一个互斥锁
+</span><span class="c1"></span>		<span class="n">MESSAGE_MUTEX</span> <span class="o">=</span> <span class="k">new</span> <span class="n">pthread_mutex_t</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+		<span class="n">pthread_mutex_init</span><span class="p">(</span><span class="n">MESSAGE_MUTEX</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">)</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="c1">// 析构函数
+</span><span class="c1"></span>	<span class="o">~</span><span class="n">MessageQueue</span><span class="p">(</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="c1">//释放锁
+</span><span class="c1"></span>		<span class="n">pthread_mutex_destroy</span><span class="p">(</span><span class="n">MESSAGE_MUTEX</span><span class="p">)</span><span class="p">;</span>
+		<span class="k">delete</span> <span class="n">MESSAGE_MUTEX</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="c1">// 传入消息到队列中，加锁防止冲突
+</span><span class="c1"></span>	<span class="kt">void</span> <span class="nf">AddTask</span><span class="p">(</span><span class="kt">int</span> <span class="n">type</span><span class="p">,</span> <span class="n">string</span> <span class="o">&amp;</span><span class="n">msg</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="n">MESSAGE_MUTEX</span><span class="p">)</span><span class="p">;</span>
+		<span class="n">_messages</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">Message</span><span class="p">(</span><span class="n">type</span><span class="p">,</span><span class="n">msg</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+		<span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="n">MESSAGE_MUTEX</span><span class="p">)</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="c1">// 消息处理函数，调用handler进行消费，调用模板的地方，启动一个线程专门来处理消息
+</span><span class="c1"></span>	<span class="kt">void</span> <span class="nf">ProcessMessages</span><span class="p">(</span><span class="p">)</span>
+    <span class="p">{</span>
+		<span class="n">pthread_mutex_lock</span><span class="p">(</span><span class="n">MESSAGE_MUTEX</span><span class="p">)</span><span class="p">;</span>
+		<span class="k">for</span> <span class="p">(</span><span class="n">set</span><span class="o">&lt;</span><span class="n">Message</span><span class="o">&gt;</span><span class="o">:</span><span class="o">:</span><span class="n">iterator</span> <span class="n">msg</span><span class="o">=</span><span class="n">_messages</span><span class="p">.</span><span class="n">begin</span><span class="p">(</span><span class="p">)</span><span class="p">;</span> <span class="n">msg</span> <span class="o">!</span><span class="o">=</span> <span class="n">_messages</span><span class="p">.</span><span class="n">end</span><span class="p">(</span><span class="p">)</span><span class="p">;</span><span class="p">)</span> <span class="p">{</span>
+			<span class="c1">// 遍历处理任务
+</span><span class="c1"></span>			<span class="kt">int</span> <span class="n">result</span> <span class="o">=</span> <span class="n">_handler</span><span class="p">(</span><span class="p">(</span><span class="n">Message</span><span class="o">&amp;</span><span class="p">)</span><span class="o">*</span><span class="n">msg</span><span class="p">,</span> <span class="n">_opaque</span><span class="p">)</span><span class="p">;</span>
+			<span class="c1">// 处理完删除任务
+</span><span class="c1"></span>			<span class="n">_messages</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span><span class="p">;</span>
+		<span class="p">}</span>
+		<span class="n">pthread_mutex_unlock</span><span class="p">(</span><span class="n">MESSAGE_MUTEX</span><span class="p">)</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="k">private</span><span class="o">:</span>
+	<span class="n">Handler</span>           <span class="n">_handler</span><span class="p">;</span>
+	<span class="kt">void</span><span class="o">*</span>             <span class="n">_opaque</span><span class="p">;</span>
+	<span class="n">pthread_mutex_t</span><span class="o">*</span>  <span class="n">_msg_mutex</span><span class="p">;</span>
+	<span class="n">set</span><span class="o">&lt;</span><span class="n">Message</span><span class="o">&gt;</span>      <span class="n">_messages</span><span class="p">;</span>
+	
+<span class="k">public</span><span class="o">:</span>
+	<span class="c1">// 定义消息结构体
+</span><span class="c1"></span>	<span class="k">struct</span> <span class="nc">Message</span><span class="p">{</span>
+		<span class="kt">int</span> <span class="n">type</span><span class="p">;</span>
+		<span class="n">string</span> <span class="n">data</span><span class="p">;</span>
+        <span class="n">Message</span><span class="p">(</span><span class="kt">int</span> <span class="n">type</span><span class="p">,</span> <span class="n">string</span> <span class="n">data</span><span class="p">)</span><span class="p">{</span>
+        	<span class="k">this</span><span class="o">-</span><span class="o">&gt;</span><span class="n">type</span> <span class="o">=</span> <span class="n">type</span><span class="p">;</span>
+        	<span class="k">this</span><span class="o">-</span><span class="o">&gt;</span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="n">Message</span><span class="p">(</span><span class="p">)</span><span class="o">:</span><span class="n">Message</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="p">{</span><span class="p">}</span>
+    <span class="k">private</span><span class="o">:</span>
+    	<span class="k">friend</span> <span class="k">class</span> <span class="nc">MessageQueue</span><span class="o">&lt;</span><span class="n">__R</span><span class="o">&gt;</span><span class="p">;</span>
+	<span class="p">}</span><span class="err">；</span>
+<span class="p">}</span><span class="p">;</span>
+</code></pre></div><p>使用类的声明示例：</p>
+<div class="highlight"><pre class="chroma"><code class="language-c++" data-lang="c++"><span class="k">class</span> <span class="nc">MessageHandler</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="c1">// 构造函数使用handler，实例化消息缓存队列_queue，启动线程循环处理消息任务
+</span><span class="c1"></span>    <span class="n">MessageHandler</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>   
+    <span class="o">~</span><span class="n">MessageHandler</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+    <span class="c1">// 线程处理函数，调用模板中的处理函数
+</span><span class="c1"></span>    <span class="k">static</span> <span class="kt">void</span> <span class="o">*</span><span class="nf">handle_thread</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="p">)</span><span class="p">;</span>
+    <span class="c1">// 根据类别实现消息处理
+</span><span class="c1"></span>    <span class="kt">int</span> <span class="nf">HandlerMessage</span><span class="p">(</span><span class="kt">int</span> <span class="n">type</span><span class="p">,</span> <span class="n">string</span> <span class="o">&amp;</span><span class="n">data</span><span class="p">)</span><span class="p">;</span>
+    <span class="c1">// 调用HandlerMessage，传入队列模板的函数实现
+</span><span class="c1"></span>    <span class="kr">inline</span> <span class="k">static</span> <span class="kt">int</span> <span class="nf">handler_msg</span><span class="p">(</span><span class="n">MessageQueue</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="o">:</span><span class="o">:</span><span class="n">Message</span><span class="o">&amp;</span> <span class="n">msg</span><span class="p">,</span><span class="kt">void</span><span class="o">*</span> <span class="n">opaque</span><span class="p">)</span><span class="p">;</span>
+    <span class="c1">// 添加任务到队列
+</span><span class="c1"></span>    <span class="kt">void</span> <span class="nf">add_task</span><span class="p">(</span><span class="kt">int</span> <span class="n">type</span><span class="p">,</span> <span class="n">string</span> <span class="o">&amp;</span><span class="n">data</span><span class="p">)</span><span class="p">;</span>
+<span class="k">private</span><span class="o">:</span>
+    <span class="n">MessageQueue</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span>  <span class="n">_queue</span><span class="p">;</span>
+<span class="p">}</span><span class="err">；</span>
+</code></pre></div><p>函数定义如下：</p>
+<div class="highlight"><pre class="chroma"><code class="language-c++" data-lang="c++"><span class="n">MessageHandler</span><span class="o">:</span><span class="o">:</span><span class="n">MessageHandler</span><span class="p">(</span><span class="p">)</span> <span class="o">:</span><span class="n">_queue</span><span class="p">(</span><span class="n">handler</span><span class="p">,</span><span class="k">this</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">_thread</span> <span class="o">=</span> <span class="k">new</span> <span class="n">pthread_t</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+    <span class="n">_thread_attr</span> <span class="o">=</span> <span class="k">new</span> <span class="n">pthread_attr_t</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+
+    <span class="n">pthread_attr_init</span><span class="p">(</span><span class="n">_thread_attr</span><span class="p">)</span><span class="p">;</span>
+    <span class="n">pthread_create</span><span class="p">(</span><span class="n">_thread</span><span class="p">,</span> <span class="n">_thread_attr</span><span class="p">,</span> <span class="n">handle_thread</span><span class="p">,</span> <span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="p">)</span><span class="k">this</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="n">MessageHandler</span><span class="o">:</span><span class="o">:</span><span class="o">~</span><span class="n">MessageHandler</span><span class="p">(</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">void</span> <span class="o">*</span><span class="n">pret</span><span class="o">=</span><span class="nb">NULL</span><span class="p">;</span>
+    <span class="n">pthread_join</span><span class="p">(</span><span class="o">*</span><span class="n">_thread</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">pret</span><span class="p">)</span><span class="p">;</span>
+    <span class="n">pthread_attr_destroy</span><span class="p">(</span><span class="n">_thread_attr</span><span class="p">)</span><span class="p">;</span>
+    
+    <span class="k">delete</span> <span class="n">_thread</span><span class="p">;</span>
+    <span class="k">delete</span> <span class="n">_thread_attr</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="kt">int</span> <span class="n">MessageHandler</span><span class="o">:</span><span class="o">:</span><span class="n">HandlerMessage</span><span class="p">(</span><span class="kt">int</span> <span class="n">type</span><span class="p">,</span> <span class="n">string</span> <span class="o">&amp;</span><span class="n">data</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">switch</span> <span class="p">(</span><span class="n">type</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">case</span> <span class="nl">xx</span><span class="p">:</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="c1">//...
+</span><span class="c1"></span>    <span class="p">}</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="kr">inline</span> <span class="kt">int</span> <span class="n">MessageHandler</span><span class="o">:</span><span class="o">:</span><span class="n">handler_msg</span><span class="p">(</span><span class="n">MessageQueue</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="o">:</span><span class="o">:</span><span class="n">Message</span><span class="o">&amp;</span> <span class="n">msg</span><span class="p">,</span><span class="kt">void</span><span class="o">*</span> <span class="n">opaque</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">//实际为this指针
+</span><span class="c1"></span>    <span class="n">MessageHandler</span><span class="o">*</span> <span class="n">handler</span> <span class="o">=</span> <span class="p">(</span><span class="n">MessageHandler</span><span class="o">*</span><span class="p">)</span><span class="n">opaque</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">handler</span><span class="o">-</span><span class="o">&gt;</span><span class="n">HandlerMessage</span><span class="p">(</span><span class="n">msg</span><span class="p">.</span><span class="n">type</span><span class="p">,</span> <span class="n">msg</span><span class="p">.</span><span class="n">data</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="n">MessageHandler</span><span class="o">:</span><span class="o">:</span><span class="n">Add_Task</span><span class="p">(</span><span class="kt">int</span> <span class="n">type</span><span class="p">,</span> <span class="n">string</span> <span class="o">&amp;</span><span class="n">data</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">_queue</span><span class="p">.</span><span class="n">AddTask</span><span class="p">(</span><span class="n">type</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="o">*</span><span class="n">MessageHandler</span><span class="o">:</span><span class="o">:</span><span class="n">handlethread</span><span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="n">opaque</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">// 静态函数内，使用类对象的this指针访问类中的成员
+</span><span class="c1"></span>    <span class="n">MessageHandler</span><span class="o">*</span> <span class="n">handler</span> <span class="o">=</span><span class="p">(</span><span class="n">MessageHandler</span><span class="o">*</span><span class="p">)</span><span class="n">opaque</span><span class="p">;</span>
+	<span class="k">while</span><span class="p">(</span><span class="nb">true</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">handler</span><span class="o">-</span><span class="o">&gt;</span><span class="n">_queue</span><span class="p">.</span><span class="n">ProcessMessages</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+        <span class="n">usleep</span><span class="p">(</span><span class="mi">16</span><span class="o">*</span><span class="mi">1000</span><span class="p">)</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div><div class="edit-meta">
+Last updated on 15 Jan 2020
+
+
+<br>
+Published on 15 Jan 2020
+<br><a href="https://github.com/wantmoretime/wjdsite//edit/master/content/C&#43;&#43;%5ccache_queue.md" class="edit-page"><i class="fas fa-pen-square"></i> Edit on GitHub</a></div><nav class="pagination"><a class="nav nav-prev" href="/wjdsite/c&#43;&#43;/" title="C&#43;&#43;"><i class="fas fa-arrow-left" aria-hidden="true"></i> Prev - C&#43;&#43;</a>
+<a class="nav nav-next" href="/wjdsite/c&#43;&#43;/rw_file/" title="C/C&#43;&#43;读写文件">Next - C/C&#43;&#43;读写文件 <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+</nav><footer><p class="powered">Powered by <a href="https://gohugo.io">Hugo</a>. Theme by <a href="https://themes.gohugo.io/hugo-theme-techdoc/">TechDoc</a>. Designed by <a href="https://github.com/thingsym/hugo-theme-techdoc">Thingsym</a>.</p>
+</footer>
+</main><div class="sidebar">
+
+<nav class="open-menu">
+<ul>
+<li class=""><a href="https://wantmoretime.github.io/wjdsite/">Home</a></li>
+
+<li class=""><a href="/wjdsite/network/">NETWORK</a>
+  
+</li>
+
+<li class=""><a href="/wjdsite/protocols/">PROTOCOLS</a>
+  
+</li>
+
+<li class="parent"><a href="/wjdsite/c&#43;&#43;/">C&#43;&#43;</a>
+  
+<ul class="sub-menu">
+<li class="active"><a href="/wjdsite/c&#43;&#43;/cache_queue/">缓存队列</a></li>
+<li class=""><a href="/wjdsite/c&#43;&#43;/rw_file/">C/C&#43;&#43;读写文件</a></li>
+<li class=""><a href="/wjdsite/c&#43;&#43;/c&#43;&#43;_sington_template/">C&#43;&#43;单例模式</a></li>
+<li class=""><a href="/wjdsite/c&#43;&#43;/thread_lock/">线程锁</a></li>
+<li class=""><a href="/wjdsite/c&#43;&#43;/function_pointers/">C&#43;&#43;函数指针</a></li>
+<li class=""><a href="/wjdsite/c&#43;&#43;/emplace_back/">C&#43;&#43;11 emplace相关函数</a></li>
+</ul>
+  
+</li>
+
+<li class=""><a href="/wjdsite/go/">GO</a>
+  
+<ul class="sub-menu">
+<li class=""><a href="/wjdsite/go/github&#43;hugo_build_myblog/">Github&#43;Hugo搭建个人博客网站</a></li>
+</ul>
+  
+</li>
+
+<li class=""><a href="/wjdsite/tool/">TOOL</a>
+  
+<ul class="sub-menu">
+<li class=""><a href="/wjdsite/tool/docker/">docker简单使用</a></li>
+<li class=""><a href="/wjdsite/tool/gdb/">GDB调试</a></li>
+</ul>
+  
+</li>
+</ul>
+</nav>
+
+
+
+<div class="sidebar-footer"></div>
+</div>
+</div><a href="#" id="backtothetop-fixed" class="backtothetop"
+ data-backtothetop-duration="600"
+ data-backtothetop-easing="easeOutQuart"
+ data-backtothetop-fixed-fadeIn="1000"
+ data-backtothetop-fixed-fadeOut="1000"
+ data-backtothetop-fixed-bottom="10"
+ data-backtothetop-fixed-right="20">
+<span class="fa-layers fa-fw">
+<i class="fas fa-circle"></i>
+<i class="fas fa-arrow-circle-up"></i>
+</span></a>
+</div>
+</body>
+</html>

@@ -32,7 +32,7 @@
 <meta itemprop="description" content="C&#43;&#43;单例模式">
 <meta itemprop="datePublished" content="2020-01-09T11:40:27&#43;08:00" />
 <meta itemprop="dateModified" content="2020-01-09T11:40:27&#43;08:00" />
-<meta itemprop="wordCount" content="355">
+<meta itemprop="wordCount" content="351">
 <meta itemprop="image" content="https://wantmoretime.github.io/wjdsite/og-image.png"/>
 
 
@@ -52,9 +52,8 @@
 </div>
 <div class="content-container">
 <main><h1>C&#43;&#43;单例模式</h1>
-<h2 id="heading">单例模式</h2>
 <p>单例模式用于保证系统里面一个类最多只能存在一个实例，例如缓冲池、数据库连接池、线程池、应用服务实例等。</p>
-<h3 id="heading-1">饿汉式</h3>
+<h3 id="heading">饿汉式</h3>
 <div class="highlight"><pre class="chroma"><code class="language-c++" data-lang="c++"><span class="k">class</span> <span class="nc">Singleton</span>
 <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
@@ -66,7 +65,7 @@
 <span class="k">private</span><span class="o">:</span>
     <span class="n">Singleton</span><span class="p">(</span><span class="p">)</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
 <span class="p">}</span><span class="p">;</span>
-</code></pre></div><h3 id="heading-2">懒汉式</h3>
+</code></pre></div><h3 id="heading-1">懒汉式</h3>
 <div class="highlight"><pre class="chroma"><code class="language-c++" data-lang="c++"><span class="c1">//延迟实例化单例对象
 </span><span class="c1"></span><span class="k">class</span> <span class="nc">Singleton</span>
 <span class="p">{</span>
@@ -81,7 +80,7 @@
   <span class="k">static</span> <span class="n">Singleton</span> <span class="o">*</span><span class="n">instance</span><span class="p">;</span>
   <span class="n">Singleton</span><span class="p">(</span><span class="p">)</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
 <span class="p">}</span><span class="p">;</span>
-</code></pre></div><h3 id="heading-3">单例类模板实例</h3>
+</code></pre></div><h3 id="heading-2">单例类模板实例</h3>
 <div class="highlight"><pre class="chroma"><code class="language-c++" data-lang="c++"><span class="c1">//c++11
 </span><span class="c1"></span><span class="k">template</span> <span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span>
 <span class="k">class</span> <span class="nc">Singleton</span>
@@ -156,6 +155,7 @@ Published on 9 Jan 2020
 <li class="parent"><a href="/wjdsite/c&#43;&#43;/">C&#43;&#43;</a>
   
 <ul class="sub-menu">
+<li class=""><a href="/wjdsite/c&#43;&#43;/cache_queue/">缓存队列</a></li>
 <li class=""><a href="/wjdsite/c&#43;&#43;/rw_file/">C/C&#43;&#43;读写文件</a></li>
 <li class="active"><a href="/wjdsite/c&#43;&#43;/c&#43;&#43;_sington_template/">C&#43;&#43;单例模式</a></li>
 <li class=""><a href="/wjdsite/c&#43;&#43;/thread_lock/">线程锁</a></li>

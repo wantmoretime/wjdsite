@@ -6,10 +6,19 @@
     <description>Recent content in C/C&#43;&#43; on wangjd&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 10 Jan 2020 14:31:16 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 15 Jan 2020 10:38:08 +0800</lastBuildDate>
     
 	<atom:link href="https://wantmoretime.github.io/wjdsite/categories/c/c++/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>缓存队列</title>
+      <link>https://wantmoretime.github.io/wjdsite/c&#43;&#43;/cache_queue/</link>
+      <pubDate>Wed, 15 Jan 2020 10:38:08 +0800</pubDate>
+      
+      <guid>https://wantmoretime.github.io/wjdsite/c&#43;&#43;/cache_queue/</guid>
+      <description>&lt;p&gt;使用缓存队列接收消息，避免高并发时消息漏接丢失的情况，提供一种消息缓冲的机制，还可以将消息进行统一分发处理，方便管理。&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>C/C&#43;&#43;读写文件</title>
@@ -17,7 +26,7 @@
       <pubDate>Fri, 10 Jan 2020 14:31:16 +0800</pubDate>
       
       <guid>https://wantmoretime.github.io/wjdsite/c&#43;&#43;/rw_file/</guid>
-      <description>C/C++读写文件操作 最近需要在arm_linux环境编译运行程序，许多c++特性用不了，重新回顾一下c/c++的知识。 读写文件 #include &amp;lt;stdio.h&amp;gt;#include &amp;lt;stdlib.h&amp;gt;#include &amp;lt;string&amp;gt;#include &amp;lt;iostream&amp;gt;using namespace</description>
+      <description>最近需要在arm_linux环境编译运行程序，许多c++特性用不了，重新回顾一下c/c++的知识。 读写文件 #include &amp;lt;stdio.h&amp;gt;#include &amp;lt;stdlib.h&amp;gt;#include &amp;lt;string&amp;gt;#include &amp;lt;iostream&amp;gt;using namespace std; #define RFILENAME &amp;#34;1.txt&amp;#34;#define WFILENAME &amp;#34;2.txt&amp;#34; int main() { //</description>
     </item>
     
     <item>
@@ -26,7 +35,7 @@
       <pubDate>Thu, 09 Jan 2020 11:40:27 +0800</pubDate>
       
       <guid>https://wantmoretime.github.io/wjdsite/c&#43;&#43;/c&#43;&#43;_sington_template/</guid>
-      <description>单例模式 单例模式用于保证系统里面一个类最多只能存在一个实例，例如缓冲池、数据库连接池、线程池、应用服务实例等。 饿汉式 class Singleton { public: static Singleton &amp;amp;get_instance() { static Singleton instance; return</description>
+      <description>单例模式用于保证系统里面一个类最多只能存在一个实例，例如缓冲池、数据库连接池、线程池、应用服务实例等。 饿汉式 class Singleton { public: static Singleton &amp;amp;get_instance() { static Singleton instance; return instance; } private: Singleton()</description>
     </item>
     
     <item>
