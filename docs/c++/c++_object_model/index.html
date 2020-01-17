@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>The C&#43;&#43; Object Model - wangjd&#39;s blog</title>
+<meta name="description" content="The C&#43;&#43; Object Model">
+<meta name="generator" content="Hugo 0.62.1" />
+<link href="https://wantmoretime.github.io/wjdsite/index.xml" rel="alternate" type="application/rss+xml">
+<link rel="canonical" href="https://wantmoretime.github.io/wjdsite/c&#43;&#43;/c&#43;&#43;_object_model/">
+<link rel="stylesheet" href="https://wantmoretime.github.io/wjdsite/css/theme.min.css">
+<script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+<link rel="stylesheet" href="https://wantmoretime.github.io/wjdsite/css/chroma.min.css">
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery.easing@1.4.1/jquery.easing.min.js"></script>
+<script src="https://wantmoretime.github.io/wjdsite/js/bundle.js"></script><style>
+:root {}
+</style>
+<meta property="og:title" content="The C&#43;&#43; Object Model" />
+<meta property="og:description" content="The C&#43;&#43; Object Model" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://wantmoretime.github.io/wjdsite/c&#43;&#43;/c&#43;&#43;_object_model/" />
+<meta property="og:image" content="https://wantmoretime.github.io/wjdsite/og-image.png"/>
+<meta property="article:published_time" content="2020-01-17T15:20:00+08:00" />
+<meta property="article:modified_time" content="2020-01-17T15:20:00+08:00" /><meta property="og:site_name" content="Hugo Techdoc Theme" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://wantmoretime.github.io/wjdsite/og-image.png"/>
+
+<meta name="twitter:title" content="The C&#43;&#43; Object Model"/>
+<meta name="twitter:description" content="The C&#43;&#43; Object Model"/>
+<meta itemprop="name" content="The C&#43;&#43; Object Model">
+<meta itemprop="description" content="The C&#43;&#43; Object Model">
+<meta itemprop="datePublished" content="2020-01-17T15:20:00&#43;08:00" />
+<meta itemprop="dateModified" content="2020-01-17T15:20:00&#43;08:00" />
+<meta itemprop="wordCount" content="3746">
+<meta itemprop="image" content="https://wantmoretime.github.io/wjdsite/og-image.png"/>
+
+
+
+<meta itemprop="keywords" content="C&#43;&#43;,OOP," /></head>
+<body><div class="container"><header>
+<h1>wangjd&#39;s blog</h1>
+<a href="https://github.com/wantmoretime/wjdsite/" class="github"><i class="fab fa-github"></i></a>
+<p class="description">人一旦勇敢，就真正自由</p>
+
+</header>
+<div class="global-menu">
+<nav>
+<ul>
+<li><a href="/wjdsite/">Home</a></li></ul>
+</nav>
+</div>
+<div class="content-container">
+<main><h1>The C&#43;&#43; Object Model</h1>
+<h2 id="-">零. 基础知识</h2>
+<p>Object-Oriented Features</p>
+<ul>
+<li>Encapsulation</li>
+<li>Inheritance</li>
+<li>Polymorphism</li>
+</ul>
+<p>Data members</p>
+<ul>
+<li>nonstatic data member</li>
+<li>static data member</li>
+</ul>
+<p>Member Functions</p>
+<ul>
+<li>nonstatic member function</li>
+<li>static member function</li>
+<li>virtual function</li>
+</ul>
+<h2 id="--1">一. 构造、析构、拷贝、赋值</h2>
+<h3 id="constructor">Constructor</h3>
+<p>有4种情况会造成编译器必须为未声明Constructor的classes合成一个default constructor。</p>
+<ul>
+<li>含有若干个带有Default Constructor的类对象成员（扩展已有的constructor）</li>
+<li>基类带有Default Constructor的派生类（扩张已有的constructor）</li>
+<li>带有Virtual Function的类（合成vtbl 和 vptr）</li>
+<li>带有一个Virtua Base Class的类（合成允许虚基类在执行期存取操作的代码）</li>
+</ul>
+<p>至于没有存在以上四种情况，有没有自定义constructor的class，拥有的是implicit trivial default constructor （无用的constructor），实际并没有被合成出来。</p>
+<p>在合成的default constructor中，只有base class subobjects和member class object会被初始化，所有其他的nonstatic data member（如整型、整型指针、整型数组等）都不会被初始化。因为这些对于编译器是非必要的。</p>
+<h3 id="copy-constructor">Copy Constructor</h3>
+<p>有三种情况会以一个对象作为另一个对象的初值。</p>
+<pre><code>X::X(const X&amp;); //第一个参数必须是引用类型
+</code></pre><ul>
+<li>对一个对象作显式的初始化操作</li>
+<li>对象被单子参数传给某个函数</li>
+<li>函数传回一个对象</li>
+</ul>
+<div class="highlight"><pre class="chroma"><code class="language-c++" data-lang="c++"><span class="k">class</span> <span class="nc">X</span><span class="p">{</span> <span class="p">.</span><span class="p">.</span><span class="p">.</span> <span class="p">}</span><span class="p">;</span>
+<span class="c1">//初始化
+</span><span class="c1"></span><span class="n">X</span> <span class="n">a</span><span class="o">=</span><span class="n">b</span><span class="p">;</span><span class="c1">//X a(b);
+</span><span class="c1"></span><span class="c1">//对象作为传参
+</span><span class="c1"></span><span class="k">extern</span> <span class="kt">void</span> <span class="nf">foo</span><span class="p">(</span><span class="n">X</span> <span class="n">x</span><span class="p">)</span><span class="p">;</span>
+<span class="kt">void</span> <span class="nf">bar</span><span class="p">(</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">X</span> <span class="n">b</span><span class="p">;</span>
+    <span class="n">foo</span><span class="p">(</span><span class="n">b</span><span class="p">)</span><span class="p">;</span> 
+<span class="p">}</span>
+<span class="c1">//传回对象
+</span><span class="c1"></span><span class="n">X</span> <span class="nf">foo</span><span class="p">(</span><span class="n">X</span> <span class="n">x</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">X</span> <span class="n">a</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">a</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div><h4 id="default-memberwise-initialization">Default Memberwise Initialization</h4>
+<p>当class object以“相同class的另一个object”作为初值，其内部是以所谓的default memberwise initialization手法完成的。也就是把每个内建的或派生的data member的值，从一个object拷贝到另一个object上。不过它不会拷贝其中的member class object，而是以一种递归的方式实施memberwise initialization。</p>
+<p>决定一个copy constructor是否会被合成出来标准在于class是否展现出所谓的“bitwise copy semantics”。</p>
+<h4 id="bitwise-copy">Bitwise Copy(位逐次拷贝)</h4>
+<p>存在的问题：当对象存在指针成员，拷贝后，两者指向同一块内存，当有对象被释放，两个对象都要调用delete删除内存，从而极可能引发错误。</p>
+<p>解决方法：自定义copy constructor，重新分配内存。</p>
+<h4 id="bitwise-copy-semantics">不要bitwise copy semantics！</h4>
+<p>1.<em>当class内含一个member object而后者的class声明一个copy constructor</em>。（合成copy contructor，以便调用member object的copy constructor）</p>
+<p>2.<em>当class继承一个base class而后者存在一个copy constructor</em>。（合成copy contructor，以便调用base class的copy constructor）</p>
+<p>3.<em>当class声明一个或多个virtual function。</em>（需要为class object合成一个copy constructor来将vptr初始化）</p>
+<div class="highlight"><pre class="chroma"><code class="language-c++" data-lang="c++"><span class="k">class</span> <span class="nc">base</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">base</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">base</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="nf">func_base</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+<span class="k">private</span><span class="o">:</span>
+    <span class="c1">//some data
+</span><span class="c1"></span><span class="p">}</span><span class="p">;</span>
+<span class="k">class</span> <span class="nc">Derive</span><span class="o">:</span><span class="k">public</span> <span class="n">base</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">Derive</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="o">~</span><span class="n">Derive</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="nf">func_base</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>   <span class="c1">//overwrite
+</span><span class="c1"></span>    <span class="k">virtual</span> <span class="nf">func_derive</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+<span class="k">private</span><span class="o">:</span>
+	<span class="c1">//some data
+</span><span class="c1"></span><span class="p">}</span><span class="p">;</span>
+<span class="n">derive</span> <span class="n">a</span><span class="p">;</span>
+<span class="n">derive</span> <span class="n">b</span><span class="o">=</span><span class="n">a</span><span class="p">;</span><span class="c1">// bitwise ok
+</span><span class="c1"></span><span class="n">base</span> <span class="n">c</span><span class="o">=</span><span class="n">a</span><span class="p">;</span>  <span class="c1">// 如果是bitwise将是错误的, 当调用func_base将调用基类的函数
+</span></code></pre></div><p>每一个新生成的object需要正确设置初值，否则当基类对象以派生类对象初始化，将导致严重错误。</p>
+<p>4.<em>当class派生自一个继承串链，其中有一个或多个virtual base classes</em>。</p>
+<p>问题发生在于一个class object以其derived classes的某个object作为初值的情况下。</p>
+<h3 id="copy-assignment-operator">copy assignment operator</h3>
+<p>是否是bitwise的情况和Copy Constructor类似</p>
+<ul>
+<li>如何显式地拒绝将一个class object指定给另一个class object？</li>
+</ul>
+<p>只要将copy assignment operator声明为private，并且不提供定义即可。声明为private，我们将不再允许于任何地方（除了在member function以及该class的friends之中）做赋值操作；不提供定义，则一旦某个member function或friend试图拷贝，程序链接将失败。</p>
+<h3 id="destructor">destructor</h3>
+<p>应该因为“需要”而非“感觉”来提供destructor，更不要因为你不确定是否需要一个destructor，于是就提供它。</p>
+<ul>
+<li>虚析构函数</li>
+</ul>
+<p>基类中的destructor定义为virtual，保证派生类的destructor能被调用，当基类指针指向派生类的情况。</p>
+<h2 id="--2">二. 内存模型</h2>
+<h3 id="linux">linux下进程内存分布</h3>
+<p><img src="https://raw.githubusercontent.com/wantmoretime/wjdsite/master/images/images/C++/object_model_1.jpg" alt="image"></p>
+<ul>
+<li>
+<p>程序段(代码段)：程序段为程序代码在内存中的映射，一个程序可以在内存中多有个副本。</p>
+</li>
+<li>
+<p>全局（静态）存储区：程序中的全局变量和静态变量。</p>
+<p>分为DATA段和BSS段。DATA段（全局初始化区）存放初始化的全局变量和静态变量；BSS段（全局未初始化区）存放未初始化的全局变量和静态变量。程序运行结束时自动释放。其中BBS段在程序执行之前会被系统自动清0，所以未初始化的全局变量和静态变量在程序执行之前已经为0。</p>
+</li>
+<li>
+<p>栈（stack）：用于存储局部变量、临时变量、函数的输入、输出参数和返回地址等，由程序自动分配和释放。</p>
+</li>
+<li>
+<p>堆（heap）：C/C++ 动态分配的内存保存在此，需要在程序中显式分配、释放内存。</p>
+</li>
+<li>
+<p>内存映射区：进程用到的动态库将被映射到此区域，用户通过 mmap() 函数创建的内存映射也映射到此区域。</p>
+</li>
+</ul>
+<h3 id="heading">结构体和类的内存布局</h3>
+<p>在 C++ 中，结构体和类只有一个区别：结构体默认的访问权限为 public，而类的访问默认访问权限为 private，二者在编译之后是完全相同的。</p>
+<ol>
+<li>派生类Derived类的虚表指针vptr（第一直接基类的vptr）</li>
+<li>第一直接基类的数据成员</li>
+<li>第二直接基类的虚表指针vptr</li>
+<li>第二直接基类的数据成员</li>
+<li>如果还有后继直接基类 那么依此类推</li>
+<li>派生类Derived类的成员变量</li>
+</ol>
+<p>下面讨论带虚函数的继承情况。// ubuntu16.04 64bit， g++ v5.4.0</p>
+<p>设置打印对象和虚函数表信息</p>
+<div class="highlight"><pre class="chroma"><code class="language-shell" data-lang="shell"><span class="o">(</span>gdb<span class="o">)</span> <span class="nb">set</span> print object on
+<span class="o">(</span>gdb<span class="o">)</span> <span class="nb">set</span> print vtbl on
+<span class="o">(</span>gdb<span class="o">)</span> <span class="nb">set</span> print pretty on
+</code></pre></div><h4 id="heading-1">菱形继承</h4>
+<div class="highlight"><pre class="chroma"><code class="language-c++" data-lang="c++"><span class="k">class</span> <span class="nc">A</span> <span class="p">{</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">fun</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">cout</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="sa"></span><span class="s">&#34;</span><span class="s">fun in A</span><span class="s">&#34;</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="kt">int</span> <span class="n">ma</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">B</span><span class="o">:</span> <span class="k">public</span> <span class="n">A</span>  <span class="p">{</span>   <span class="c1">//单继承
+</span><span class="c1"></span><span class="k">private</span><span class="o">:</span>
+    <span class="kt">int</span> <span class="n">m1</span><span class="o">=</span><span class="mi">11</span><span class="p">;</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">vfun</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">cout</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="sa"></span><span class="s">&#34;</span><span class="s">vfun in B</span><span class="s">&#34;</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">vfunb</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
+    <span class="n">cout</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="sa"></span><span class="s">&#34;</span><span class="s">vfun2 in B</span><span class="se">\n</span><span class="s">&#34;</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">C</span><span class="o">:</span> <span class="k">public</span> <span class="n">A</span> <span class="p">{</span>
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">int</span> <span class="n">m</span><span class="o">=</span><span class="mi">12</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">vfun3</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span><span class="p">}</span><span class="p">;</span>
+<span class="p">}</span><span class="p">;</span>
+<span class="k">class</span> <span class="nc">D</span><span class="o">:</span> <span class="k">public</span> <span class="n">B</span> <span class="p">,</span> <span class="k">public</span> <span class="n">C</span><span class="p">{</span>  <span class="c1">//菱形继承
+</span><span class="c1"></span><span class="k">private</span><span class="o">:</span>
+    <span class="kt">int</span> <span class="n">m4</span><span class="o">=</span><span class="mi">13</span><span class="p">;</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">vfun</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">cout</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="sa"></span><span class="s">&#34;</span><span class="s">vfun in D</span><span class="s">&#34;</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">fund</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">cout</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="sa"></span><span class="s">&#34;</span><span class="s">vfun3 in D</span><span class="s">&#34;</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span><span class="p">;</span>
+
+<span class="c1">// sizeof(A): 16
+</span><span class="c1"></span><span class="c1">// sizeof(B); 16
+</span><span class="c1"></span><span class="c1">// sizeof(C); 16
+</span><span class="c1"></span><span class="c1">// sizeof(D); 40
+</span><span class="c1"></span><span class="c1">// D d;  
+</span><span class="c1"></span><span class="cm">/*
+</span><span class="cm">(gdb) p d
+</span><span class="cm">$1 = (D) {
+</span><span class="cm">  &lt;B&gt; = {
+</span><span class="cm">    &lt;A&gt; = {   //二义性
+</span><span class="cm">      _vptr.A = 0x400e08 &lt;vtable for D+16&gt;, 
+</span><span class="cm">      ma = 0
+</span><span class="cm">    }, 
+</span><span class="cm">    members of B: 
+</span><span class="cm">    m1 = 11
+</span><span class="cm">  }, 
+</span><span class="cm">  &lt;C&gt; = {
+</span><span class="cm">    &lt;A&gt; = {   //二义性
+</span><span class="cm">      _vptr.A = 0x400e38 &lt;vtable for D+64&gt;, 
+</span><span class="cm">      ma = 0
+</span><span class="cm">    }, 
+</span><span class="cm">    members of C: 
+</span><span class="cm">    m = 12
+</span><span class="cm">  }, 
+</span><span class="cm">  members of D: 
+</span><span class="cm">  m4 = 13
+</span><span class="cm">}
+</span><span class="cm">(gdb) info vtbl d
+</span><span class="cm">vtable for &#39;D&#39; @ 0x400e08 (subobject @ 0x7fffffffe340):
+</span><span class="cm">[0]: 0x400b6c &lt;A::fun()&gt;
+</span><span class="cm">[1]: 0x400bfc &lt;D::vfun()&gt;
+</span><span class="cm">[2]: 0x400bc4 &lt;B::vfunb()&gt;
+</span><span class="cm">[3]: 0x400c28 &lt;D::fund()&gt;
+</span><span class="cm">vtable for &#39;C&#39; @ 0x400e38 (subobject @ 0x7fffffffe350):
+</span><span class="cm">[0]: 0x400b6c &lt;A::fun()&gt;
+</span><span class="cm">[1]: 0x400bf0 &lt;C::vfun3()&gt;
+</span><span class="cm">
+</span><span class="cm">(gdb) p b
+</span><span class="cm">$2 = (B) {
+</span><span class="cm">  &lt;A&gt; = {
+</span><span class="cm">    _vptr.A = 0x400e78 &lt;vtable for B+16&gt;, 
+</span><span class="cm">    ma = 0
+</span><span class="cm">  }, 
+</span><span class="cm">  members of B: 
+</span><span class="cm">  m1 = 11
+</span><span class="cm">}
+</span><span class="cm">(gdb) info vtbl b
+</span><span class="cm">vtable for &#39;B&#39; @ 0x400e78 (subobject @ 0x7fffffffe320):
+</span><span class="cm">[0]: 0x400b6c &lt;A::fun()&gt;
+</span><span class="cm">[1]: 0x400b98 &lt;B::vfun()&gt;
+</span><span class="cm">[2]: 0x400bc4 &lt;B::vfunb()&gt;
+</span><span class="cm">
+</span><span class="cm">(gdb) p c
+</span><span class="cm">$3 = (C) {
+</span><span class="cm">  &lt;A&gt; = {
+</span><span class="cm">    _vptr.A = 0x400e58 &lt;vtable for C+16&gt;, 
+</span><span class="cm">    ma = 0
+</span><span class="cm">  }, 
+</span><span class="cm">  members of C: 
+</span><span class="cm">  m = 12
+</span><span class="cm">}
+</span><span class="cm">(gdb) info vtbl c
+</span><span class="cm">vtable for &#39;C&#39; @ 0x400e58 (subobject @ 0x7fffffffe330):
+</span><span class="cm">[0]: 0x400b6c &lt;A::fun()&gt;
+</span><span class="cm">[1]: 0x400bf0 &lt;C::vfun3()&gt;
+</span><span class="cm">*/</span>
+</code></pre></div><h4 id="heading-2">菱形虚继承</h4>
+<div class="highlight"><pre class="chroma"><code class="language-c++" data-lang="c++"><span class="k">class</span> <span class="nc">A</span> <span class="p">{</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">fun</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">cout</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="sa"></span><span class="s">&#34;</span><span class="s">fun in A</span><span class="s">&#34;</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="kt">int</span> <span class="n">ma</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">B</span><span class="o">:</span> <span class="k">virtual</span> <span class="k">public</span> <span class="n">A</span>  <span class="p">{</span>    <span class="c1">//单虚继承
+</span><span class="c1"></span><span class="k">private</span><span class="o">:</span>
+    <span class="kt">int</span> <span class="n">m1</span><span class="o">=</span><span class="mi">11</span><span class="p">;</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">vfun</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">cout</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="sa"></span><span class="s">&#34;</span><span class="s">vfun in B</span><span class="s">&#34;</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">vfunb</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
+    <span class="n">cout</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="sa"></span><span class="s">&#34;</span><span class="s">vfun2 in B</span><span class="se">\n</span><span class="s">&#34;</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">C</span><span class="o">:</span><span class="k">virtual</span> <span class="k">public</span> <span class="n">A</span> <span class="p">{</span>
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">int</span> <span class="n">m</span><span class="o">=</span><span class="mi">12</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">vfun3</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span><span class="p">}</span><span class="p">;</span>
+<span class="p">}</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">D</span><span class="o">:</span> <span class="k">public</span> <span class="n">B</span> <span class="p">,</span> <span class="k">public</span> <span class="n">C</span><span class="p">{</span>   <span class="c1">//菱形继承
+</span><span class="c1"></span><span class="k">private</span><span class="o">:</span>
+    <span class="kt">int</span> <span class="n">m4</span><span class="o">=</span><span class="mi">13</span><span class="p">;</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">vfun</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">cout</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="sa"></span><span class="s">&#34;</span><span class="s">vfun in D</span><span class="s">&#34;</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">fund</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">cout</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="sa"></span><span class="s">&#34;</span><span class="s">fund in D</span><span class="s">&#34;</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span><span class="p">;</span>
+<span class="c1">//D d; 
+</span><span class="c1"></span><span class="c1">//sizeof(D); 48
+</span><span class="c1"></span><span class="cm">/*
+</span><span class="cm">(gdb) p d
+</span><span class="cm">$1 = (D) {
+</span><span class="cm">  &lt;B&gt; = {
+</span><span class="cm">    &lt;A&gt; = {
+</span><span class="cm">      _vptr.A = 0x400ef0 &lt;vtable for D+104&gt;, 
+</span><span class="cm">      ma = 0
+</span><span class="cm">    }, 
+</span><span class="cm">    members of B: 
+</span><span class="cm">    _vptr.B = 0x400ea0 &lt;vtable for D+24&gt;, 
+</span><span class="cm">    m1 = 11
+</span><span class="cm">  }, 
+</span><span class="cm">  &lt;C&gt; = {
+</span><span class="cm">    members of C: 
+</span><span class="cm">    _vptr.C = 0x400ed0 &lt;vtable for D+72&gt;, 
+</span><span class="cm">    m = 12
+</span><span class="cm">  }, 
+</span><span class="cm">  members of D: 
+</span><span class="cm">  m4 = 13
+</span><span class="cm">}
+</span><span class="cm">(gdb) info vtbl d
+</span><span class="cm">vtable for &#39;D&#39; @ 0x400ea0 (subobject @ 0x7fffffffe330):
+</span><span class="cm">[0]: 0x400b9c &lt;D::vfun()&gt;
+</span><span class="cm">[1]: 0x400b64 &lt;B::vfunb()&gt;
+</span><span class="cm">[2]: 0x400bc8 &lt;D::fund()&gt;
+</span><span class="cm">vtable for &#39;C&#39; @ 0x400ed0 (subobject @ 0x7fffffffe340):
+</span><span class="cm">[0]: 0x400b90 &lt;C::vfun3()&gt;
+</span><span class="cm">vtable for &#39;A&#39; @ 0x400ef0 (subobject @ 0x7fffffffe350):
+</span><span class="cm">[0]: 0x400b0c &lt;A::fun()&gt;
+</span><span class="cm">
+</span><span class="cm">(gdb) p b
+</span><span class="cm">$2 = (B) {
+</span><span class="cm">  &lt;A&gt; = {
+</span><span class="cm">    _vptr.A = 0x401058 &lt;vtable for B+64&gt;, 
+</span><span class="cm">    ma = 0
+</span><span class="cm">  }, 
+</span><span class="cm">  members of B: 
+</span><span class="cm">  _vptr.B = 0x401030 &lt;vtable for B+24&gt;, 
+</span><span class="cm">  m1 = 11
+</span><span class="cm">}
+</span><span class="cm">(gdb) info vtbl b
+</span><span class="cm">vtable for &#39;B&#39; @ 0x401030 (subobject @ 0x7fffffffe2f0):
+</span><span class="cm">[0]: 0x400b38 &lt;B::vfun()&gt;
+</span><span class="cm">[1]: 0x400b64 &lt;B::vfunb()&gt;
+</span><span class="cm">vtable for &#39;A&#39; @ 0x401058 (subobject @ 0x7fffffffe300):
+</span><span class="cm">[0]: 0x400b0c &lt;A::fun()&gt;
+</span><span class="cm">
+</span><span class="cm">(gdb) p c
+</span><span class="cm">$3 = (C) {
+</span><span class="cm">  &lt;A&gt; = {
+</span><span class="cm">    _vptr.A = 0x401000 &lt;vtable for C+56&gt;, 
+</span><span class="cm">    ma = 0
+</span><span class="cm">  }, 
+</span><span class="cm">  members of C: 
+</span><span class="cm">  _vptr.C = 0x400fe0 &lt;vtable for C+24&gt;, 
+</span><span class="cm">  m = 12
+</span><span class="cm">}
+</span><span class="cm">(gdb) info vtbl c
+</span><span class="cm">vtable for &#39;C&#39; @ 0x400fe0 (subobject @ 0x7fffffffe310):
+</span><span class="cm">[0]: 0x400b90 &lt;C::vfun3()&gt;
+</span><span class="cm">vtable for &#39;A&#39; @ 0x401000 (subobject @ 0x7fffffffe320):
+</span><span class="cm">[0]: 0x400b0c &lt;A::fun()&gt;
+</span><span class="cm">
+</span><span class="cm">*/</span>
+</code></pre></div><h4 id="heading-3">多重虚继承</h4>
+<div class="highlight"><pre class="chroma"><code class="language-c++" data-lang="c++"><span class="k">class</span> <span class="nc">B</span>   <span class="p">{</span>
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">int</span> <span class="n">m1</span><span class="o">=</span><span class="mi">11</span><span class="p">;</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">vfun</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">cout</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="sa"></span><span class="s">&#34;</span><span class="s">vfun in B</span><span class="s">&#34;</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">vfunb</span><span class="p">(</span><span class="p">)</span><span class="p">{</span>
+    <span class="n">cout</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="sa"></span><span class="s">&#34;</span><span class="s">vfun2 in B</span><span class="se">\n</span><span class="s">&#34;</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">C</span>  <span class="p">{</span>
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">int</span> <span class="n">m</span><span class="o">=</span><span class="mi">12</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">vfun3</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span><span class="p">}</span><span class="p">;</span>
+<span class="p">}</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">D</span><span class="o">:</span><span class="k">virtual</span> <span class="k">public</span> <span class="n">B</span> <span class="p">,</span><span class="k">virtual</span> <span class="k">public</span> <span class="n">C</span><span class="p">{</span>
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">int</span> <span class="n">m4</span><span class="o">=</span><span class="mi">13</span><span class="p">;</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">vfun</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">cout</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="sa"></span><span class="s">&#34;</span><span class="s">vfun in D</span><span class="s">&#34;</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">fund</span><span class="p">(</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">cout</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="sa"></span><span class="s">&#34;</span><span class="s">vfun3 in D</span><span class="s">&#34;</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+
+<span class="p">}</span><span class="p">;</span>
+<span class="cm">/*
+</span><span class="cm">(gdb) p d
+</span><span class="cm">$1 = (D) {
+</span><span class="cm">  &lt;B&gt; = {
+</span><span class="cm">    _vptr.B = 0x400d90 &lt;vtable for D+80&gt;, 
+</span><span class="cm">    m1 = 11
+</span><span class="cm">  }, 
+</span><span class="cm">  &lt;C&gt; = {
+</span><span class="cm">    _vptr.C = 0x400db8 &lt;vtable for D+120&gt;, 
+</span><span class="cm">    m = 12
+</span><span class="cm">  }, 
+</span><span class="cm">  members of D: 
+</span><span class="cm">  _vptr.D = 0x400d60 &lt;vtable for D+32&gt;, 
+</span><span class="cm">  m4 = 13
+</span><span class="cm">}
+</span><span class="cm">(gdb) info vtbl d
+</span><span class="cm">vtable for &#39;D&#39; @ 0x400d60 (subobject @ 0x7fffffffe330):
+</span><span class="cm">[0]: 0x400b70 &lt;D::vfun()&gt;
+</span><span class="cm">[1]: 0x400ba4 &lt;D::fund()&gt;
+</span><span class="cm">vtable for &#39;B&#39; @ 0x400d90 (subobject @ 0x7fffffffe340):
+</span><span class="cm">[0]: 0x400b9b &lt;virtual thunk to D::vfun()&gt;
+</span><span class="cm">[1]: 0x400b38 &lt;B::vfunb()&gt;
+</span><span class="cm">vtable for &#39;C&#39; @ 0x400db8 (subobject @ 0x7fffffffe350):
+</span><span class="cm">[0]: 0x400b64 &lt;C::vfun3()&gt;
+</span><span class="cm">*/</span>
+</code></pre></div><p>多重虚继承将保留多个基类虚函数表，派生类将拥有一个自己的虚表指针，如果定义了虚函数，则派生类生成一个自己的虚函数表；（否则派生类虚表指针未指向虚函数表）</p>
+<h3 id="raii">RAII和智能指针</h3>
+<p>RAII（Resource Acquisition Is Initialization）即“资源获取就是初始化”，智能指针是 RAII 思想的一种体现，它通过类的构造函数和析构函数来管理资源的申请和释放。使用智能指针可以大大减少内存泄漏的情况。</p>
+<ul>
+<li>unique_ptr</li>
+<li>share_ptr</li>
+<li>weak_ptr</li>
+</ul>
+<h2 id="--3">三. 补充</h2>
+<h3 id="heading-4">静态数据成员&amp;静态成员函数</h3>
+<p>1.静态数据成员</p>
+<p>存储在全局数据区，属于类所有，由所有对象共享，不占用类对象的大小</p>
+<p>没有this指针</p>
+<p>2.静态成员函数</p>
+<p>属于类所有，只能访问静态数据成员和静态成员函数</p>
+<p>没有this指针</p>
+<p><img src="https://raw.githubusercontent.com/wantmoretime/wjdsite/master/images/images/C++/object_model_2.png" alt="image"></p>
+<h3 id="heading-5">初始化</h3>
+<p>Effective C++ 条款4：确定对象被使用前已先被初始化</p>
+<ul>
+<li>为内置型对象进行手工初始化，因为C++不保证初始化它们。局部内置变量不初始化，全局变量会初始化</li>
+<li>构造函数最好使用成员初始化列表，而不要在构造函数本体内使用赋值操作。初始化列表列出的成员变量，其排列顺序应该和它们在class中声明的次序相同。</li>
+<li>为免除“跨编译单元之初始化次序”的问题，请以local static对象代替non-local static对象。</li>
+</ul><div class="edit-meta">
+Last updated on 17 Jan 2020
+
+
+<br>
+Published on 17 Jan 2020
+<br><a href="https://github.com/wantmoretime/wjdsite//edit/master/content/C&#43;&#43;%5cC&#43;&#43;_Object_Model.md" class="edit-page"><i class="fas fa-pen-square"></i> Edit on GitHub</a></div><nav class="pagination"><a class="nav nav-prev" href="/wjdsite/c&#43;&#43;/" title="C&#43;&#43;"><i class="fas fa-arrow-left" aria-hidden="true"></i> Prev - C&#43;&#43;</a>
+<a class="nav nav-next" href="/wjdsite/c&#43;&#43;/cache_queue/" title="缓存队列">Next - 缓存队列 <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+</nav><footer><p class="powered">Powered by <a href="https://gohugo.io">Hugo</a>. Theme by <a href="https://themes.gohugo.io/hugo-theme-techdoc/">TechDoc</a>. Designed by <a href="https://github.com/thingsym/hugo-theme-techdoc">Thingsym</a>.</p>
+</footer>
+</main><div class="sidebar">
+
+<nav class="open-menu">
+<ul>
+<li class=""><a href="https://wantmoretime.github.io/wjdsite/">Home</a></li>
+
+<li class=""><a href="/wjdsite/network/">NETWORK</a>
+  
+</li>
+
+<li class=""><a href="/wjdsite/protocols/">PROTOCOLS</a>
+  
+</li>
+
+<li class="parent"><a href="/wjdsite/c&#43;&#43;/">C&#43;&#43;</a>
+  
+<ul class="sub-menu">
+<li class="active"><a href="/wjdsite/c&#43;&#43;/c&#43;&#43;_object_model/">The C&#43;&#43; Object Model</a></li>
+<li class=""><a href="/wjdsite/c&#43;&#43;/cache_queue/">缓存队列</a></li>
+<li class=""><a href="/wjdsite/c&#43;&#43;/rw_file/">C/C&#43;&#43;读写文件</a></li>
+<li class=""><a href="/wjdsite/c&#43;&#43;/c&#43;&#43;_sington_template/">C&#43;&#43;单例模式</a></li>
+<li class=""><a href="/wjdsite/c&#43;&#43;/thread_lock/">线程锁</a></li>
+<li class=""><a href="/wjdsite/c&#43;&#43;/function_pointers/">C&#43;&#43;函数指针</a></li>
+<li class=""><a href="/wjdsite/c&#43;&#43;/emplace_back/">C&#43;&#43;11 emplace相关函数</a></li>
+<li class=""><a href="/wjdsite/c&#43;&#43;/the-c&#43;&#43;-object-model/"></a></li>
+</ul>
+  
+</li>
+
+<li class=""><a href="/wjdsite/go/">GO</a>
+  
+<ul class="sub-menu">
+<li class=""><a href="/wjdsite/go/github&#43;hugo_build_myblog/">Github&#43;Hugo搭建个人博客网站</a></li>
+</ul>
+  
+</li>
+
+<li class=""><a href="/wjdsite/tool/">TOOL</a>
+  
+<ul class="sub-menu">
+<li class=""><a href="/wjdsite/tool/docker/">docker简单使用</a></li>
+<li class=""><a href="/wjdsite/tool/gdb/">GDB调试</a></li>
+</ul>
+  
+</li>
+</ul>
+</nav>
+
+
+
+<div class="sidebar-footer"></div>
+</div>
+</div><a href="#" id="backtothetop-fixed" class="backtothetop"
+ data-backtothetop-duration="600"
+ data-backtothetop-easing="easeOutQuart"
+ data-backtothetop-fixed-fadeIn="1000"
+ data-backtothetop-fixed-fadeOut="1000"
+ data-backtothetop-fixed-bottom="10"
+ data-backtothetop-fixed-right="20">
+<span class="fa-layers fa-fw">
+<i class="fas fa-circle"></i>
+<i class="fas fa-arrow-circle-up"></i>
+</span></a>
+</div>
+</body>
+</html>

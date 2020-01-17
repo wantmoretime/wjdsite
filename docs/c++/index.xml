@@ -12,6 +12,15 @@
     
     
     <item>
+      <title>The C&#43;&#43; Object Model</title>
+      <link>https://wantmoretime.github.io/wjdsite/c&#43;&#43;/c&#43;&#43;_object_model/</link>
+      <pubDate>Fri, 17 Jan 2020 15:20:00 +0800</pubDate>
+      
+      <guid>https://wantmoretime.github.io/wjdsite/c&#43;&#43;/c&#43;&#43;_object_model/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>缓存队列</title>
       <link>https://wantmoretime.github.io/wjdsite/c&#43;&#43;/cache_queue/</link>
       <pubDate>Wed, 15 Jan 2020 10:38:08 +0800</pubDate>
@@ -63,6 +72,22 @@
       
       <guid>https://wantmoretime.github.io/wjdsite/c&#43;&#43;/emplace_back/</guid>
       <description>&lt;p&gt;C++11中，顺序容器(如vector、deque、list)，新标准引入了三个新成员：emplace_front、emplace和emplace_back代替push_front、insert和push_back，可提高效率。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://wantmoretime.github.io/wjdsite/c&#43;&#43;/the-c&#43;&#43;-object-model/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://wantmoretime.github.io/wjdsite/c&#43;&#43;/the-c&#43;&#43;-object-model/</guid>
+      <description>The C++ Object Model [TOC]
+零. 基础知识 Object-Oriented Features
+ Encapsulation Inheritance Polymorphism  Data members
+ nonstatic data member static data member  Member Functions
+ nonstatic member function static member function virtual function  一. 构造、析构、拷贝、赋值 Constructor 有4种情况会造成编译器必须为未声明Constructor的classes合成一个default constructor。
+ 含有若干个带有Default Constructor的类对象成员（扩展已有的constructor） 基类带有Default Constructor的派生类（扩张已有的constructor） 带有Virtual Function的类（合成vtbl 和 vptr） 带有一个Virtua Base Class的类（合成允许虚基类在执行期存取操作的代码）  至于没有存在以上四种情况，有没有自定义constructor的class，拥有的是implicit trivial default constructor （无用的constructor），实际并没有被合成出来。
+在合成的default constructor中，只有base class subobjects和member class object会被初始化，所有其他的nonstatic data member（如整型、整型指针、整型数组等）都不会被初始化。因为这些对于编译器是非必要的。
+Copy Constructor 有三种情况会以一个对象作为另一个对象的初值。</description>
     </item>
     
   </channel>

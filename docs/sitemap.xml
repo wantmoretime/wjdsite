@@ -4,22 +4,32 @@
   
   <url>
     <loc>https://wantmoretime.github.io/wjdsite/tags/c&#43;&#43;/</loc>
-    <lastmod>2020-01-15T10:38:08+08:00</lastmod>
+    <lastmod>2020-01-17T15:20:00+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://wantmoretime.github.io/wjdsite/categories/c/c&#43;&#43;/</loc>
-    <lastmod>2020-01-15T10:38:08+08:00</lastmod>
+    <lastmod>2020-01-17T15:20:00+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://wantmoretime.github.io/wjdsite/categories/</loc>
-    <lastmod>2020-01-15T10:38:08+08:00</lastmod>
+    <lastmod>2020-01-17T15:20:00+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wantmoretime.github.io/wjdsite/tags/oop/</loc>
+    <lastmod>2020-01-17T15:20:00+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://wantmoretime.github.io/wjdsite/tags/</loc>
-    <lastmod>2020-01-15T10:38:08+08:00</lastmod>
+    <lastmod>2020-01-17T15:20:00+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wantmoretime.github.io/wjdsite/c&#43;&#43;/c&#43;&#43;_object_model/</loc>
+    <lastmod>2020-01-17T15:20:00+08:00</lastmod>
   </url>
   
   <url>
@@ -160,6 +170,11 @@
   <url>
     <loc>https://wantmoretime.github.io/wjdsite/tags/hugo/</loc>
     <lastmod>2020-01-04T18:38:29+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wantmoretime.github.io/wjdsite/c&#43;&#43;/the-c&#43;&#43;-object-model/</loc>
+    <priority>0</priority>
   </url>
   
 </urlset>
