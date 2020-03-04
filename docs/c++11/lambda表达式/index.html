@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>lambda表达式 - wangjd&#39;s blog</title>
+<meta name="description" content="人一旦勇敢，就真正自由">
+<meta name="generator" content="Hugo 0.62.1" />
+<link href="https://wantmoretime.github.io/wjdsite/index.xml" rel="alternate" type="application/rss+xml">
+<link rel="canonical" href="https://wantmoretime.github.io/wjdsite/c&#43;&#43;11/lambda%E8%A1%A8%E8%BE%BE%E5%BC%8F/">
+<link rel="stylesheet" href="https://wantmoretime.github.io/wjdsite/css/theme.min.css">
+<script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+<link rel="stylesheet" href="https://wantmoretime.github.io/wjdsite/css/chroma.min.css">
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery.easing@1.4.1/jquery.easing.min.js"></script>
+<script src="https://wantmoretime.github.io/wjdsite/js/bundle.js"></script><style>
+:root {}
+</style>
+<meta property="og:title" content="lambda表达式" />
+<meta property="og:description" content="" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://wantmoretime.github.io/wjdsite/c&#43;&#43;11/lambda%E8%A1%A8%E8%BE%BE%E5%BC%8F/" />
+<meta property="og:image" content="https://wantmoretime.github.io/wjdsite/og-image.png"/>
+<meta property="article:published_time" content="2020-02-16T13:45:00+08:00" />
+<meta property="article:modified_time" content="2020-02-16T13:45:00+08:00" /><meta property="og:site_name" content="Hugo Techdoc Theme" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://wantmoretime.github.io/wjdsite/og-image.png"/>
+
+<meta name="twitter:title" content="lambda表达式"/>
+<meta name="twitter:description" content=""/>
+<meta itemprop="name" content="lambda表达式">
+<meta itemprop="description" content="">
+<meta itemprop="datePublished" content="2020-02-16T13:45:00&#43;08:00" />
+<meta itemprop="dateModified" content="2020-02-16T13:45:00&#43;08:00" />
+<meta itemprop="wordCount" content="556">
+<meta itemprop="image" content="https://wantmoretime.github.io/wjdsite/og-image.png"/>
+
+
+
+<meta itemprop="keywords" content="C&#43;&#43; 11," /></head>
+<body><div class="container"><header>
+<h1>wangjd&#39;s blog</h1>
+<a href="https://github.com/wantmoretime/wjdsite/" class="github"><i class="fab fa-github"></i></a>
+<p class="description">人一旦勇敢，就真正自由</p>
+
+</header>
+<div class="global-menu">
+<nav>
+<ul>
+<li><a href="/wjdsite/">Home</a></li></ul>
+</nav>
+</div>
+<div class="content-container">
+<main><h1>lambda表达式</h1>
+<p>A lambda expression is a mechanism for specifying a function object. The primary use for a lambda is to specify a simple action to be performed by some function. For example:</p>
+<pre><code>	vector&lt;int&gt; v = {50, -10, 20, -30};
+
+	std::sort(v.begin(), v.end());	// the default sort
+	// now v should be { -30, -10, 20, 50 }
+
+	// sort by absolute value:
+	std::sort(v.begin(), v.end(), [](int a, int b) { return abs(a)&lt;abs(b); });
+	// now v should be { -10, 20, -30, 50 }
+</code></pre><p>The argument  <code>[](int a, int b) { return abs(a)&lt;abs(b); } </code> is a &ldquo;lambda&rdquo; (or &ldquo;lambda function&rdquo; or &ldquo;lambda expression&rdquo;), which specifies an operation that given two integer arguments a and b returns the result of comparing their absolute values.</p>
+<p>A lambda expression can access local variables in the scope in which it is used. For example:</p>
+<pre><code>	void f(vector&lt;Record&gt;&amp; v)
+	{
+		vector&lt;int&gt; indices(v.size());
+		int count = 0;
+		generate(indices.begin(),indices.end(),[&amp;count](){ return count++; });
+
+		// sort indices in the order determined by the name field of the records:
+		std::sort(indices.begin(), indices.end(), [&amp;](int a, int b) { return v[a].name&lt;v[b].name; });
+		// ...
+	}
+</code></pre><p>Some consider this &ldquo;really neat!&quot;; others see it as a way to write dangerously obscure code. IMO, both are right.</p>
+<p>The <strong>[&amp;]</strong> is a &ldquo;capture list&rdquo; specifying that local names used will be passed by reference.  We could have said that we wanted to &ldquo;capture&rdquo; only <strong>v</strong>, we could have said so: <strong>[&amp;v]</strong>. Had we wanted to pass <strong>v</strong> by value, we could have said so: <strong>[=v]</strong>. Capture nothing is <strong>[]</strong>, capture all by references is <strong>[&amp;]</strong>,  and capture all by value is <strong>[=]</strong>.</p>
+<p>If an action is neither common nor simple, I recommend using a named function object or function. For example, the example above could have been written:</p>
+<pre><code>	void f(vector&lt;Record&gt;&amp; v)
+	{
+		vector&lt;int&gt; indices(v.size());
+		int count = 0;
+		generate(indices.begin(),indices.end(),[&amp;](){ return ++count; });
+
+		struct Cmp_names {
+			const vector&lt;Record&gt;&amp; vr;
+			Cmp_names(const vector&lt;Record&gt;&amp; r) :vr(r) { }
+			bool operator()(int a, int b) const { return vr[a].name&lt;vr[b].name; }
+		};
+
+		// sort indices in the order determined by the name field of the records:
+		std::sort(indices.begin(), indices.end(), Cmp_names(v));
+		// ...
+	}
+</code></pre><p>For a tiny function, such as this Record name field comparison, the function object notation is verbose, though the generated code is likely to be identical. In C++98, such function objects had to be non-local to be used as template argument; in C++11 this is no longer necessary.</p>
+<p>To specify a lambda you must provide</p>
+<ul>
+<li>
+<p>its capture list: the list of variables it can use (in addition to its arguments), if any (<strong>[&amp;]</strong> meaning &ldquo;all local variables passed by reference&rdquo; in the Record comparison example). If no names needs to be captured, a lambda starts with plain <strong>[]</strong>.</p>
+</li>
+<li>
+<p>(optionally) its arguments and their types (e.g, <strong>(int a, int b)</strong>)</p>
+</li>
+<li>
+<p>The action to be performed as a block (e.g., <strong>{ return v[a].name&lt;v[b].name; }</strong>).</p>
+</li>
+<li>
+<p>(optionally) the return type using the <a href="http://www.stroustrup.com/C++11FAQ.html#suffix-return">new suffix return type syntax</a>; but typically we just deduce the return type from the return statement. If no value is returned <strong>void</strong> is deduced.</p>
+<p>See also:</p>
+</li>
+<li>
+<p>Standard 5.1.2 Lambda expressions</p>
+</li>
+<li>
+<p>[N1968=06-0038] Jeremiah Willcock, Jaakko Jarvi, Doug Gregor, Bjarne Stroustrup, and Andrew Lumsdaine:  <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2006/n1968.htm">Lambda expressions and closures for C++</a> (original proposal with a different syntax)</p>
+</li>
+<li>
+<p>[N2550=08-0060] Jaakko Jarvi, John Freeman, and Lawrence Crowl: <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2550.pdf">Lambda Expressions and Closures: Wording for Monomorphic Lambdas (Revision 4)</a> (final proposal).</p>
+</li>
+<li>
+<p>[N2859=09-0049] Daveed Vandevoorde: <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2859.pdf">New wording for C++0x Lambdas</a>.</p>
+</li>
+</ul><div class="edit-meta">
+Last updated on 16 Feb 2020
+
+
+<br>
+Published on 16 Feb 2020
+<br><a href="https://github.com/wantmoretime/wjdsite//edit/master/content/C&#43;&#43;11%5clambda%e8%a1%a8%e8%be%be%e5%bc%8f.md" class="edit-page"><i class="fas fa-pen-square"></i> Edit on GitHub</a></div><nav class="pagination"><a class="nav nav-prev" href="/wjdsite/c&#43;&#43;11/auto/" title="auto关键字"><i class="fas fa-arrow-left" aria-hidden="true"></i> Prev - auto关键字</a>
+<a class="nav nav-next" href="/wjdsite/c&#43;&#43;11/emplace_back/" title="C&#43;&#43;11 emplace相关函数">Next - C&#43;&#43;11 emplace相关函数 <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+</nav><footer><p class="powered">Powered by <a href="https://gohugo.io">Hugo</a>. Theme by <a href="https://themes.gohugo.io/hugo-theme-techdoc/">TechDoc</a>. Designed by <a href="https://github.com/thingsym/hugo-theme-techdoc">Thingsym</a>.</p>
+</footer>
+</main><div class="sidebar">
+
+<nav class="open-menu">
+<ul>
+<li class=""><a href="https://wantmoretime.github.io/wjdsite/">Home</a></li>
+
+<li class=""><a href="/wjdsite/network/">网络编程</a>
+  
+</li>
+
+<li class=""><a href="/wjdsite/protocals/">协议类</a>
+  
+</li>
+
+<li class=""><a href="/wjdsite/c&#43;&#43;/">C&#43;&#43;</a>
+  
+<ul class="sub-menu">
+<li class=""><a href="/wjdsite/c&#43;&#43;/c&#43;&#43;_object_model/">The C&#43;&#43; Object Model</a></li>
+<li class=""><a href="/wjdsite/c&#43;&#43;/cache_queue/">缓存队列</a></li>
+<li class=""><a href="/wjdsite/c&#43;&#43;/rw_file/">C/C&#43;&#43;读写文件</a></li>
+<li class=""><a href="/wjdsite/c&#43;&#43;/c&#43;&#43;_sington_template/">C&#43;&#43;单例模式</a></li>
+<li class=""><a href="/wjdsite/c&#43;&#43;/thread_lock/">线程锁</a></li>
+<li class=""><a href="/wjdsite/c&#43;&#43;/function_pointers/">C&#43;&#43;函数指针</a></li>
+</ul>
+  
+</li>
+
+<li class="parent"><a href="/wjdsite/c&#43;&#43;11/">C&#43;&#43; 11</a>
+  
+<ul class="sub-menu">
+<li class=""><a href="/wjdsite/c&#43;&#43;11/auto/">auto关键字</a></li>
+<li class="active"><a href="/wjdsite/c&#43;&#43;11/lambda%E8%A1%A8%E8%BE%BE%E5%BC%8F/">lambda表达式</a></li>
+<li class=""><a href="/wjdsite/c&#43;&#43;11/emplace_back/">C&#43;&#43;11 emplace相关函数</a></li>
+</ul>
+  
+</li>
+
+<li class=""><a href="/wjdsite/go/">Go</a>
+  
+</li>
+
+<li class=""><a href="/wjdsite/tools/">工具/软件</a>
+  
+<ul class="sub-menu">
+<li class=""><a href="/wjdsite/tools/docker/">docker简单使用</a></li>
+<li class=""><a href="/wjdsite/tools/gdb/">GDB调试</a></li>
+<li class=""><a href="/wjdsite/tools/github&#43;hugo_build_myblog/">Github&#43;Hugo搭建个人博客网站</a></li>
+</ul>
+  
+</li>
+</ul>
+</nav>
+
+
+
+<div class="sidebar-footer"></div>
+</div>
+</div><a href="#" id="backtothetop-fixed" class="backtothetop"
+ data-backtothetop-duration="600"
+ data-backtothetop-easing="easeOutQuart"
+ data-backtothetop-fixed-fadeIn="1000"
+ data-backtothetop-fixed-fadeOut="1000"
+ data-backtothetop-fixed-bottom="10"
+ data-backtothetop-fixed-right="20">
+<span class="fa-layers fa-fw">
+<i class="fas fa-circle"></i>
+<i class="fas fa-arrow-circle-up"></i>
+</span></a>
+</div>
+</body>
+</html>

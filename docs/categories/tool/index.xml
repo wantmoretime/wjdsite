@@ -13,28 +13,28 @@
     
     <item>
       <title>docker简单使用</title>
-      <link>https://wantmoretime.github.io/wjdsite/tool/docker/</link>
+      <link>https://wantmoretime.github.io/wjdsite/tools/docker/</link>
       <pubDate>Tue, 14 Jan 2020 17:25:08 +0800</pubDate>
       
-      <guid>https://wantmoretime.github.io/wjdsite/tool/docker/</guid>
+      <guid>https://wantmoretime.github.io/wjdsite/tools/docker/</guid>
       <description>&lt;p&gt;docker的一次简单使用&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>GDB调试</title>
-      <link>https://wantmoretime.github.io/wjdsite/tool/gdb/</link>
+      <link>https://wantmoretime.github.io/wjdsite/tools/gdb/</link>
       <pubDate>Wed, 08 Jan 2020 21:16:30 +0800</pubDate>
       
-      <guid>https://wantmoretime.github.io/wjdsite/tool/gdb/</guid>
+      <guid>https://wantmoretime.github.io/wjdsite/tools/gdb/</guid>
       <description>&lt;p&gt;在Linux下开发C/C++程序，GDB调试的一项必须熟练掌握的技能，有助于DEBUG和提高开发效率。&lt;/p&gt;</description>
     </item>
     
     <item>
       <title>Github&#43;Hugo搭建个人博客网站</title>
-      <link>https://wantmoretime.github.io/wjdsite/go/github&#43;hugo_build_myblog/</link>
+      <link>https://wantmoretime.github.io/wjdsite/tools/github&#43;hugo_build_myblog/</link>
       <pubDate>Sat, 04 Jan 2020 18:38:29 +0800</pubDate>
       
-      <guid>https://wantmoretime.github.io/wjdsite/go/github&#43;hugo_build_myblog/</guid>
+      <guid>https://wantmoretime.github.io/wjdsite/tools/github&#43;hugo_build_myblog/</guid>
       <description>&lt;p&gt;本篇blog主要介绍使用Github+hugo,简单搭建个人博客。&lt;/p&gt;</description>
     </item>
     

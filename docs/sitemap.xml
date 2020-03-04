@@ -3,27 +3,42 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://wantmoretime.github.io/wjdsite/c&#43;&#43;11/auto/</loc>
+    <lastmod>2020-02-27T12:45:00+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wantmoretime.github.io/wjdsite/tags/c&#43;&#43;-11/</loc>
+    <lastmod>2020-02-27T12:45:00+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wantmoretime.github.io/wjdsite/categories/c/c&#43;&#43;/</loc>
+    <lastmod>2020-02-27T12:45:00+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wantmoretime.github.io/wjdsite/categories/</loc>
+    <lastmod>2020-02-27T12:45:00+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wantmoretime.github.io/wjdsite/tags/</loc>
+    <lastmod>2020-02-27T12:45:00+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wantmoretime.github.io/wjdsite/c&#43;&#43;11/lambda%E8%A1%A8%E8%BE%BE%E5%BC%8F/</loc>
+    <lastmod>2020-02-16T13:45:00+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://wantmoretime.github.io/wjdsite/tags/c&#43;&#43;/</loc>
     <lastmod>2020-01-17T15:20:00+08:00</lastmod>
   </url>
   
   <url>
-    <loc>https://wantmoretime.github.io/wjdsite/categories/c/c&#43;&#43;/</loc>
-    <lastmod>2020-01-17T15:20:00+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://wantmoretime.github.io/wjdsite/categories/</loc>
-    <lastmod>2020-01-17T15:20:00+08:00</lastmod>
-  </url>
-  
-  <url>
     <loc>https://wantmoretime.github.io/wjdsite/tags/oop/</loc>
-    <lastmod>2020-01-17T15:20:00+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://wantmoretime.github.io/wjdsite/tags/</loc>
     <lastmod>2020-01-17T15:20:00+08:00</lastmod>
   </url>
   
@@ -48,7 +63,7 @@
   </url>
   
   <url>
-    <loc>https://wantmoretime.github.io/wjdsite/tool/docker/</loc>
+    <loc>https://wantmoretime.github.io/wjdsite/tools/docker/</loc>
     <lastmod>2020-01-14T17:25:08+08:00</lastmod>
   </url>
   
@@ -68,7 +83,7 @@
   </url>
   
   <url>
-    <loc>https://wantmoretime.github.io/wjdsite/protocols/</loc>
+    <loc>https://wantmoretime.github.io/wjdsite/protocals/</loc>
     <lastmod>2020-01-13T18:19:00+08:00</lastmod>
   </url>
   
@@ -98,7 +113,7 @@
   </url>
   
   <url>
-    <loc>https://wantmoretime.github.io/wjdsite/tool/gdb/</loc>
+    <loc>https://wantmoretime.github.io/wjdsite/tools/gdb/</loc>
     <lastmod>2020-01-08T21:16:30+08:00</lastmod>
   </url>
   
@@ -123,6 +138,11 @@
   </url>
   
   <url>
+    <loc>https://wantmoretime.github.io/wjdsite/c&#43;&#43;11/</loc>
+    <lastmod>2020-01-07T11:19:37+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://wantmoretime.github.io/wjdsite/go/</loc>
     <lastmod>2020-01-07T11:19:37+08:00</lastmod>
   </url>
@@ -133,7 +153,7 @@
   </url>
   
   <url>
-    <loc>https://wantmoretime.github.io/wjdsite/tool/</loc>
+    <loc>https://wantmoretime.github.io/wjdsite/tools/</loc>
     <lastmod>2020-01-07T11:19:37+08:00</lastmod>
   </url>
   
@@ -153,7 +173,12 @@
   </url>
   
   <url>
-    <loc>https://wantmoretime.github.io/wjdsite/c&#43;&#43;/emplace_back/</loc>
+    <loc>https://wantmoretime.github.io/wjdsite/c&#43;&#43;11/emplace_back/</loc>
+    <lastmod>2020-01-05T17:32:29+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://wantmoretime.github.io/wjdsite/tags/stl/</loc>
     <lastmod>2020-01-05T17:32:29+08:00</lastmod>
   </url>
   
@@ -163,18 +188,13 @@
   </url>
   
   <url>
-    <loc>https://wantmoretime.github.io/wjdsite/go/github&#43;hugo_build_myblog/</loc>
+    <loc>https://wantmoretime.github.io/wjdsite/tools/github&#43;hugo_build_myblog/</loc>
     <lastmod>2020-01-04T18:38:29+08:00</lastmod>
   </url>
   
   <url>
     <loc>https://wantmoretime.github.io/wjdsite/tags/hugo/</loc>
     <lastmod>2020-01-04T18:38:29+08:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://wantmoretime.github.io/wjdsite/c&#43;&#43;/the-c&#43;&#43;-object-model/</loc>
-    <priority>0</priority>
   </url>
   
 </urlset>

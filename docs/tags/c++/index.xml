@@ -47,14 +47,5 @@
       <description>&lt;p&gt;C++函数指针以及map管理函数指针的应用&lt;/p&gt;</description>
     </item>
     
-    <item>
-      <title>C&#43;&#43;11 emplace相关函数</title>
-      <link>https://wantmoretime.github.io/wjdsite/c&#43;&#43;/emplace_back/</link>
-      <pubDate>Sun, 05 Jan 2020 17:32:29 +0800</pubDate>
-      
-      <guid>https://wantmoretime.github.io/wjdsite/c&#43;&#43;/emplace_back/</guid>
-      <description>&lt;p&gt;C++11中，顺序容器(如vector、deque、list)，新标准引入了三个新成员：emplace_front、emplace和emplace_back代替push_front、insert和push_back，可提高效率。&lt;/p&gt;</description>
-    </item>
-    
   </channel>
 </rss>

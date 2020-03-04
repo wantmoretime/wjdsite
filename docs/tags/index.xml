@@ -6,10 +6,19 @@
     <description>Recent content in Tags on wangjd&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 17 Jan 2020 15:20:00 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 27 Feb 2020 12:45:00 +0800</lastBuildDate>
     
 	<atom:link href="https://wantmoretime.github.io/wjdsite/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>C&#43;&#43; 11</title>
+      <link>https://wantmoretime.github.io/wjdsite/tags/c&#43;&#43;-11/</link>
+      <pubDate>Thu, 27 Feb 2020 12:45:00 +0800</pubDate>
+      
+      <guid>https://wantmoretime.github.io/wjdsite/tags/c&#43;&#43;-11/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>C&#43;&#43;</title>
@@ -107,6 +116,15 @@
       <pubDate>Mon, 06 Jan 2020 20:38:00 +0800</pubDate>
       
       <guid>https://wantmoretime.github.io/wjdsite/tags/leetcode/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>STL</title>
+      <link>https://wantmoretime.github.io/wjdsite/tags/stl/</link>
+      <pubDate>Sun, 05 Jan 2020 17:32:29 +0800</pubDate>
+      
+      <guid>https://wantmoretime.github.io/wjdsite/tags/stl/</guid>
       <description></description>
     </item>
     

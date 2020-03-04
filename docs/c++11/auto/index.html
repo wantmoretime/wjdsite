@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>auto关键字 - wangjd&#39;s blog</title>
+<meta name="description" content="人一旦勇敢，就真正自由">
+<meta name="generator" content="Hugo 0.62.1" />
+<link href="https://wantmoretime.github.io/wjdsite/index.xml" rel="alternate" type="application/rss+xml">
+<link rel="canonical" href="https://wantmoretime.github.io/wjdsite/c&#43;&#43;11/auto/">
+<link rel="stylesheet" href="https://wantmoretime.github.io/wjdsite/css/theme.min.css">
+<script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+<link rel="stylesheet" href="https://wantmoretime.github.io/wjdsite/css/chroma.min.css">
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery.easing@1.4.1/jquery.easing.min.js"></script>
+<script src="https://wantmoretime.github.io/wjdsite/js/bundle.js"></script><style>
+:root {}
+</style>
+<meta property="og:title" content="auto关键字" />
+<meta property="og:description" content="" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://wantmoretime.github.io/wjdsite/c&#43;&#43;11/auto/" />
+<meta property="og:image" content="https://wantmoretime.github.io/wjdsite/og-image.png"/>
+<meta property="article:published_time" content="2020-02-27T12:45:00+08:00" />
+<meta property="article:modified_time" content="2020-02-27T12:45:00+08:00" /><meta property="og:site_name" content="Hugo Techdoc Theme" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://wantmoretime.github.io/wjdsite/og-image.png"/>
+
+<meta name="twitter:title" content="auto关键字"/>
+<meta name="twitter:description" content=""/>
+<meta itemprop="name" content="auto关键字">
+<meta itemprop="description" content="">
+<meta itemprop="datePublished" content="2020-02-27T12:45:00&#43;08:00" />
+<meta itemprop="dateModified" content="2020-02-27T12:45:00&#43;08:00" />
+<meta itemprop="wordCount" content="351">
+<meta itemprop="image" content="https://wantmoretime.github.io/wjdsite/og-image.png"/>
+
+
+
+<meta itemprop="keywords" content="C&#43;&#43; 11," /></head>
+<body><div class="container"><header>
+<h1>wangjd&#39;s blog</h1>
+<a href="https://github.com/wantmoretime/wjdsite/" class="github"><i class="fab fa-github"></i></a>
+<p class="description">人一旦勇敢，就真正自由</p>
+
+</header>
+<div class="global-menu">
+<nav>
+<ul>
+<li><a href="/wjdsite/">Home</a></li></ul>
+</nav>
+</div>
+<div class="content-container">
+<main><h1>auto关键字</h1>
+<p>使用的形式如下：</p>
+<div class="highlight"><pre class="chroma"><code class="language-c++" data-lang="c++"><span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">expression</span><span class="p">;</span>
+</code></pre></div><p>x的类型就是表达式计算出来结果的类型。</p>
+<p>使用auto来推导被初始化的变量的类型，在类型未知或不便书写的情况下是非常有用的。如下：</p>
+<div class="highlight"><pre class="chroma"><code class="language-c++" data-lang="c++"><span class="k">template</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">T</span><span class="o">&gt;</span> <span class="kt">void</span> <span class="n">printall</span><span class="p">(</span><span class="k">const</span> <span class="n">vector</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="o">&amp;</span> <span class="n">v</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">p</span> <span class="o">=</span> <span class="n">v</span><span class="p">.</span><span class="n">begin</span><span class="p">(</span><span class="p">)</span><span class="p">;</span> <span class="n">p</span><span class="o">!</span><span class="o">=</span><span class="n">v</span><span class="p">.</span><span class="n">end</span><span class="p">(</span><span class="p">)</span><span class="p">;</span> <span class="o">+</span><span class="o">+</span><span class="n">p</span><span class="p">)</span>
+		<span class="n">cout</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="o">*</span><span class="n">p</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="sa"></span><span class="s">&#34;</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div><p>同样的代码含义，在c++98里，我们必须这么写：</p>
+<pre><code>template&lt;class T&gt; void printall(const vector&lt;T&gt;&amp; v)
+{
+	for (typename vector&lt;T&gt;::const_iterator p = v.begin(); p!=v.end(); ++p)
+		cout &lt;&lt; *p &lt;&lt; &quot;\n&quot;;
+}
+</code></pre><p>当变量的数据类型依赖于模板参数时，如果不使用auto关键字，将很难确定变量的数据类型。如：</p>
+<pre><code>template&lt;class T, class U&gt; void multiply(const vector&lt;T&gt;&amp; vt, const vector&lt;U&gt;&amp; vu)
+{
+	// ...
+	auto tmp = vt[i]*vu[i];
+	// ...
+}
+</code></pre><p>在这里，tmp的数据类型应该与模板参数T和U相乘之后的结果的数据类型相同。对于程序员来说，要通过模板参数确定tmp的数据类型是一件很困难的事情。但是，对于编译器来说，一旦确定了T和U的数据类型，推断tmp的数据类型将是轻而易举的一件事情。</p>
+<p>auto主要用于简化代码，因此并不会影响标准库规范。</p><div class="edit-meta">
+Last updated on 27 Feb 2020
+
+
+<br>
+Published on 27 Feb 2020
+<br><a href="https://github.com/wantmoretime/wjdsite//edit/master/content/C&#43;&#43;11%5cauto.md" class="edit-page"><i class="fas fa-pen-square"></i> Edit on GitHub</a></div><nav class="pagination"><a class="nav nav-prev" href="/wjdsite/c&#43;&#43;11/" title="C&#43;&#43; 11"><i class="fas fa-arrow-left" aria-hidden="true"></i> Prev - C&#43;&#43; 11</a>
+<a class="nav nav-next" href="/wjdsite/c&#43;&#43;11/lambda%E8%A1%A8%E8%BE%BE%E5%BC%8F/" title="lambda表达式">Next - lambda表达式 <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+</nav><footer><p class="powered">Powered by <a href="https://gohugo.io">Hugo</a>. Theme by <a href="https://themes.gohugo.io/hugo-theme-techdoc/">TechDoc</a>. Designed by <a href="https://github.com/thingsym/hugo-theme-techdoc">Thingsym</a>.</p>
+</footer>
+</main><div class="sidebar">
+
+<nav class="open-menu">
+<ul>
+<li class=""><a href="https://wantmoretime.github.io/wjdsite/">Home</a></li>
+
+<li class=""><a href="/wjdsite/network/">网络编程</a>
+  
+</li>
+
+<li class=""><a href="/wjdsite/protocals/">协议类</a>
+  
+</li>
+
+<li class=""><a href="/wjdsite/c&#43;&#43;/">C&#43;&#43;</a>
+  
+<ul class="sub-menu">
+<li class=""><a href="/wjdsite/c&#43;&#43;/c&#43;&#43;_object_model/">The C&#43;&#43; Object Model</a></li>
+<li class=""><a href="/wjdsite/c&#43;&#43;/cache_queue/">缓存队列</a></li>
+<li class=""><a href="/wjdsite/c&#43;&#43;/rw_file/">C/C&#43;&#43;读写文件</a></li>
+<li class=""><a href="/wjdsite/c&#43;&#43;/c&#43;&#43;_sington_template/">C&#43;&#43;单例模式</a></li>
+<li class=""><a href="/wjdsite/c&#43;&#43;/thread_lock/">线程锁</a></li>
+<li class=""><a href="/wjdsite/c&#43;&#43;/function_pointers/">C&#43;&#43;函数指针</a></li>
+</ul>
+  
+</li>
+
+<li class="parent"><a href="/wjdsite/c&#43;&#43;11/">C&#43;&#43; 11</a>
+  
+<ul class="sub-menu">
+<li class="active"><a href="/wjdsite/c&#43;&#43;11/auto/">auto关键字</a></li>
+<li class=""><a href="/wjdsite/c&#43;&#43;11/lambda%E8%A1%A8%E8%BE%BE%E5%BC%8F/">lambda表达式</a></li>
+<li class=""><a href="/wjdsite/c&#43;&#43;11/emplace_back/">C&#43;&#43;11 emplace相关函数</a></li>
+</ul>
+  
+</li>
+
+<li class=""><a href="/wjdsite/go/">Go</a>
+  
+</li>
+
+<li class=""><a href="/wjdsite/tools/">工具/软件</a>
+  
+<ul class="sub-menu">
+<li class=""><a href="/wjdsite/tools/docker/">docker简单使用</a></li>
+<li class=""><a href="/wjdsite/tools/gdb/">GDB调试</a></li>
+<li class=""><a href="/wjdsite/tools/github&#43;hugo_build_myblog/">Github&#43;Hugo搭建个人博客网站</a></li>
+</ul>
+  
+</li>
+</ul>
+</nav>
+
+
+
+<div class="sidebar-footer"></div>
+</div>
+</div><a href="#" id="backtothetop-fixed" class="backtothetop"
+ data-backtothetop-duration="600"
+ data-backtothetop-easing="easeOutQuart"
+ data-backtothetop-fixed-fadeIn="1000"
+ data-backtothetop-fixed-fadeOut="1000"
+ data-backtothetop-fixed-bottom="10"
+ data-backtothetop-fixed-right="20">
+<span class="fa-layers fa-fw">
+<i class="fas fa-circle"></i>
+<i class="fas fa-arrow-circle-up"></i>
+</span></a>
+</div>
+</body>
+</html>
