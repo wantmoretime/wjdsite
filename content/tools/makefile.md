@@ -19,7 +19,23 @@ categories:
 
 
 
-Makefile和交叉编译
+Makefile
 
  <!--more-->
+
+
+
+动态库编译
+
+
+
+静态库编译
+
+ar rcs
+
+
+
+交叉编译
+
+
 

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>I/O on wangjd&#39;s blog</title>
+    <link>https://wantmoretime.github.io/wjdsite/tags/i/o/</link>
+    <description>Recent content in I/O on wangjd&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 11 Feb 2020 12:14:08 +0800</lastBuildDate>
+    
+	<atom:link href="https://wantmoretime.github.io/wjdsite/tags/i/o/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>网络编程中的IO模型</title>
+      <link>https://wantmoretime.github.io/wjdsite/network/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B%E7%9A%84io%E6%A8%A1%E5%9E%8B/</link>
+      <pubDate>Tue, 11 Feb 2020 12:14:08 +0800</pubDate>
+      
+      <guid>https://wantmoretime.github.io/wjdsite/network/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B%E7%9A%84io%E6%A8%A1%E5%9E%8B/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

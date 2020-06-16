@@ -11,5 +11,33 @@
 	<atom:link href="https://wantmoretime.github.io/wjdsite/network/index.xml" rel="self" type="application/rss+xml" />
     
     
+    <item>
+      <title>字节序</title>
+      <link>https://wantmoretime.github.io/wjdsite/network/%E5%AD%97%E8%8A%82%E5%BA%8F/</link>
+      <pubDate>Tue, 11 Feb 2020 12:14:08 +0800</pubDate>
+      
+      <guid>https://wantmoretime.github.io/wjdsite/network/%E5%AD%97%E8%8A%82%E5%BA%8F/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>网络编程中的IO模型</title>
+      <link>https://wantmoretime.github.io/wjdsite/network/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B%E7%9A%84io%E6%A8%A1%E5%9E%8B/</link>
+      <pubDate>Tue, 11 Feb 2020 12:14:08 +0800</pubDate>
+      
+      <guid>https://wantmoretime.github.io/wjdsite/network/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B%E7%9A%84io%E6%A8%A1%E5%9E%8B/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>epoll</title>
+      <link>https://wantmoretime.github.io/wjdsite/network/epoll/</link>
+      <pubDate>Tue, 07 Jan 2020 11:20:08 +0800</pubDate>
+      
+      <guid>https://wantmoretime.github.io/wjdsite/network/epoll/</guid>
+      <description>&lt;p&gt;转自知乎：https://zhuanlan.zhihu.com/p/63179839&lt;/p&gt;
+&lt;p&gt;剖析epoll的本质，了解epoll为什么性能好。&lt;/p&gt;</description>
+    </item>
+    
   </channel>
 </rss>

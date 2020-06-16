@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>cmd on wangjd&#39;s blog</title>
+    <link>https://wantmoretime.github.io/wjdsite/tags/cmd/</link>
+    <description>Recent content in cmd on wangjd&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 08 Jan 2020 21:16:30 +0800</lastBuildDate>
+    
+	<atom:link href="https://wantmoretime.github.io/wjdsite/tags/cmd/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Linux常用命令</title>
+      <link>https://wantmoretime.github.io/wjdsite/tools/linux_cmd/</link>
+      <pubDate>Wed, 08 Jan 2020 21:16:30 +0800</pubDate>
+      
+      <guid>https://wantmoretime.github.io/wjdsite/tools/linux_cmd/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

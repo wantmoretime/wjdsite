@@ -38,5 +38,24 @@
       <description>&lt;p&gt;在Linux下开发C/C++程序，GDB调试的一项必须熟练掌握的技能，有助于DEBUG和提高开发效率。&lt;/p&gt;</description>
     </item>
     
+    <item>
+      <title>Linux常用命令</title>
+      <link>https://wantmoretime.github.io/wjdsite/tools/linux_cmd/</link>
+      <pubDate>Wed, 08 Jan 2020 21:16:30 +0800</pubDate>
+      
+      <guid>https://wantmoretime.github.io/wjdsite/tools/linux_cmd/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>epoll</title>
+      <link>https://wantmoretime.github.io/wjdsite/network/epoll/</link>
+      <pubDate>Tue, 07 Jan 2020 11:20:08 +0800</pubDate>
+      
+      <guid>https://wantmoretime.github.io/wjdsite/network/epoll/</guid>
+      <description>&lt;p&gt;转自知乎：https://zhuanlan.zhihu.com/p/63179839&lt;/p&gt;
+&lt;p&gt;剖析epoll的本质，了解epoll为什么性能好。&lt;/p&gt;</description>
+    </item>
+    
   </channel>
 </rss>

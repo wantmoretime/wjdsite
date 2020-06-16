@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>std::thread - wangjd&#39;s blog</title>
+<meta name="description" content="人一旦勇敢，就真正自由">
+<meta name="generator" content="Hugo 0.62.1" />
+<link href="https://wantmoretime.github.io/wjdsite/index.xml" rel="alternate" type="application/rss+xml">
+<link rel="canonical" href="https://wantmoretime.github.io/wjdsite/c&#43;&#43;11/thread%E5%A4%9A%E7%BA%BF%E7%A8%8B/">
+<link rel="stylesheet" href="https://wantmoretime.github.io/wjdsite/css/theme.min.css">
+<script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+<link rel="stylesheet" href="https://wantmoretime.github.io/wjdsite/css/chroma.min.css">
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery.easing@1.4.1/jquery.easing.min.js"></script>
+<script src="https://wantmoretime.github.io/wjdsite/js/bundle.js"></script><style>
+:root {}
+</style>
+<meta property="og:title" content="std::thread" />
+<meta property="og:description" content="C&#43;&#43;11之前的多线程使用pthread库是基于C语言的标准库，C&#43;&#43;11标准库支持了自己的多线程库,在std命名空间下。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://wantmoretime.github.io/wjdsite/c&#43;&#43;11/thread%E5%A4%9A%E7%BA%BF%E7%A8%8B/" />
+<meta property="og:image" content="https://wantmoretime.github.io/wjdsite/og-image.png"/>
+<meta property="article:published_time" content="2020-06-16T10:45:00+08:00" />
+<meta property="article:modified_time" content="2020-06-16T10:45:00+08:00" /><meta property="og:site_name" content="Hugo Techdoc Theme" />
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://wantmoretime.github.io/wjdsite/og-image.png"/>
+
+<meta name="twitter:title" content="std::thread"/>
+<meta name="twitter:description" content="C&#43;&#43;11之前的多线程使用pthread库是基于C语言的标准库，C&#43;&#43;11标准库支持了自己的多线程库,在std命名空间下。"/>
+<meta itemprop="name" content="std::thread">
+<meta itemprop="description" content="C&#43;&#43;11之前的多线程使用pthread库是基于C语言的标准库，C&#43;&#43;11标准库支持了自己的多线程库,在std命名空间下。">
+<meta itemprop="datePublished" content="2020-06-16T10:45:00&#43;08:00" />
+<meta itemprop="dateModified" content="2020-06-16T10:45:00&#43;08:00" />
+<meta itemprop="wordCount" content="637">
+<meta itemprop="image" content="https://wantmoretime.github.io/wjdsite/og-image.png"/>
+
+
+
+<meta itemprop="keywords" content="C&#43;&#43; 11,多线程,源码," /></head>
+<body><div class="container"><header>
+<h1>wangjd&#39;s blog</h1>
+<a href="https://github.com/wantmoretime/wjdsite/" class="github"><i class="fab fa-github"></i></a>
+<p class="description">人一旦勇敢，就真正自由</p>
+
+</header>
+<div class="global-menu">
+<nav>
+<ul>
+<li><a href="/wjdsite/">Home</a></li></ul>
+</nav>
+</div>
+<div class="content-container">
+<main><h1>std::thread</h1>
+<p>C++11之前的多线程使用pthread库是基于C语言的标准库，C++11标准库支持了自己的多线程库<!-- raw HTML omitted -->,在std命名空间下。</p>
+<p>​	线程在构造关联的线程对象后立即开始执行，从作为构造函数参数提供的执行函数开始。 执行函数的返回值将被忽略，如果它通过引发异常终止，则将调用std :: terminate。执行函数可以通过std :: promise或修改共享变量（如果需要同步，请参见std :: mutex和std :: atomic）将其返回值或异常传达给调用方。</p>
+<p>​	std::thread的不可拷贝和不可赋值的，但是是可以移动拷贝和移动赋值的。</p>
+<h2 id="heading">源码内部实现</h2>
+<h3 id="member-types">Member types</h3>
+<table>
+<thead>
+<tr>
+<th>Member type</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>native_handle_type</code>(optional)</td>
+<td><em>implementation-defined</em></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Member classes</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://en.cppreference.com/w/cpp/thread/thread/id"> id</a></td>
+<td>represents the <em>id</em> of a thread (public member class)</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Member functions</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://en.cppreference.com/w/cpp/thread/thread/thread">(constructor)</a></td>
+<td>constructs new thread object</td>
+</tr>
+<tr>
+<td><a href="https://en.cppreference.com/w/cpp/thread/thread/%7Ethread">(destructor)</a></td>
+<td>destructs the thread object, underlying thread must be joined or detached</td>
+</tr>
+<tr>
+<td><a href="https://en.cppreference.com/w/cpp/thread/thread/operator%3D">operator=</a></td>
+<td>moves the thread object</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Observers</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://en.cppreference.com/w/cpp/thread/thread/joinable">joinable</a></td>
+<td>checks whether the thread is joinable, i.e. potentially running in parallel context</td>
+</tr>
+<tr>
+<td><a href="https://en.cppreference.com/w/cpp/thread/thread/get_id">get_id</a></td>
+<td>returns the id of the thread</td>
+</tr>
+<tr>
+<td><a href="https://en.cppreference.com/w/cpp/thread/thread/native_handle">native_handle</a></td>
+<td>returns the underlying implementation-defined thread handle</td>
+</tr>
+<tr>
+<td><a href="https://en.cppreference.com/w/cpp/thread/thread/hardware_concurrency"> hardware_concurrency</a> [static]</td>
+<td>returns the number of concurrent threads supported by the implementation</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Operations</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://en.cppreference.com/w/cpp/thread/thread/join">join</a></td>
+<td>waits for a thread to finish its execution</td>
+</tr>
+<tr>
+<td><a href="https://en.cppreference.com/w/cpp/thread/thread/detach">detach</a></td>
+<td>permits the thread to execute independently from the thread handle</td>
+</tr>
+<tr>
+<td><a href="https://en.cppreference.com/w/cpp/thread/thread/swap">swap</a></td>
+<td>swaps two thread objects</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Non-member functions</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://en.cppreference.com/w/cpp/thread/thread/swap2"> std::swap(std::thread)</a></td>
+<td>specializes the <a href="https://en.cppreference.com/w/cpp/algorithm/swap">std::swap</a> algorithm</td>
+</tr>
+</tbody>
+</table>
+<h2 id="example">Example</h2>
+<p>例1：</p>
+<div class="highlight"><pre class="chroma"><code class="language-c++" data-lang="c++"><span class="cp">#</span><span class="cp">include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span><span class="cp"></span><span class="cp">#</span><span class="cp">include</span> <span class="cpf">&lt;thread&gt;</span><span class="cp">
+</span><span class="cp"></span><span class="cp">#</span><span class="cp">include</span> <span class="cpf">&lt;chrono&gt;</span><span class="cp">
+</span><span class="cp"></span> 
+<span class="kt">void</span> <span class="nf">foo</span><span class="p">(</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">this_thread</span><span class="o">:</span><span class="o">:</span><span class="n">sleep_for</span><span class="p">(</span><span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">chrono</span><span class="o">:</span><span class="o">:</span><span class="n">seconds</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span>
+ 
+<span class="kt">void</span> <span class="nf">bar</span><span class="p">(</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">this_thread</span><span class="o">:</span><span class="o">:</span><span class="n">sleep_for</span><span class="p">(</span><span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">chrono</span><span class="o">:</span><span class="o">:</span><span class="n">seconds</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span>
+ 
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="kr">thread</span> <span class="n">t1</span><span class="p">(</span><span class="n">foo</span><span class="p">)</span><span class="p">;</span> <span class="c1">//启动线程执行foo()函数,函数异常退出会调用std::terminate
+</span><span class="c1"></span>    <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="kr">thread</span> <span class="n">t2</span><span class="p">(</span><span class="n">bar</span><span class="p">)</span><span class="p">;</span>
+ 
+    <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">cout</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="sa"></span><span class="s">&#34;</span><span class="s">thread 1 id: </span><span class="s">&#34;</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="n">t1</span><span class="p">.</span><span class="n">get_id</span><span class="p">(</span><span class="p">)</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="sa"></span><span class="sc">&#39;</span><span class="sc">\n</span><span class="sc">&#39;</span>
+              <span class="o">&lt;</span><span class="o">&lt;</span> <span class="sa"></span><span class="s">&#34;</span><span class="s">thread 2 id: </span><span class="s">&#34;</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="n">t2</span><span class="p">.</span><span class="n">get_id</span><span class="p">(</span><span class="p">)</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="sa"></span><span class="sc">&#39;</span><span class="sc">\n</span><span class="sc">&#39;</span><span class="p">;</span>
+ 
+    <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">swap</span><span class="p">(</span><span class="n">t1</span><span class="p">,</span> <span class="n">t2</span><span class="p">)</span><span class="p">;</span>
+ 
+    <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">cout</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="sa"></span><span class="s">&#34;</span><span class="s">after std::swap(t1, t2):</span><span class="s">&#34;</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="sa"></span><span class="sc">&#39;</span><span class="sc">\n</span><span class="sc">&#39;</span>
+              <span class="o">&lt;</span><span class="o">&lt;</span> <span class="sa"></span><span class="s">&#34;</span><span class="s">thread 1 id: </span><span class="s">&#34;</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="n">t1</span><span class="p">.</span><span class="n">get_id</span><span class="p">(</span><span class="p">)</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="sa"></span><span class="sc">&#39;</span><span class="sc">\n</span><span class="sc">&#39;</span>
+              <span class="o">&lt;</span><span class="o">&lt;</span> <span class="sa"></span><span class="s">&#34;</span><span class="s">thread 2 id: </span><span class="s">&#34;</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="n">t2</span><span class="p">.</span><span class="n">get_id</span><span class="p">(</span><span class="p">)</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="sa"></span><span class="sc">&#39;</span><span class="sc">\n</span><span class="sc">&#39;</span><span class="p">;</span>
+ 
+    <span class="n">t1</span><span class="p">.</span><span class="n">swap</span><span class="p">(</span><span class="n">t2</span><span class="p">)</span><span class="p">;</span>
+ 
+    <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">cout</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="sa"></span><span class="s">&#34;</span><span class="s">after t1.swap(t2):</span><span class="s">&#34;</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="sa"></span><span class="sc">&#39;</span><span class="sc">\n</span><span class="sc">&#39;</span>
+              <span class="o">&lt;</span><span class="o">&lt;</span> <span class="sa"></span><span class="s">&#34;</span><span class="s">thread 1 id: </span><span class="s">&#34;</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="n">t1</span><span class="p">.</span><span class="n">get_id</span><span class="p">(</span><span class="p">)</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="sa"></span><span class="sc">&#39;</span><span class="sc">\n</span><span class="sc">&#39;</span>
+              <span class="o">&lt;</span><span class="o">&lt;</span> <span class="sa"></span><span class="s">&#34;</span><span class="s">thread 2 id: </span><span class="s">&#34;</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="n">t2</span><span class="p">.</span><span class="n">get_id</span><span class="p">(</span><span class="p">)</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="sa"></span><span class="sc">&#39;</span><span class="sc">\n</span><span class="sc">&#39;</span><span class="p">;</span>
+ 
+    <span class="n">t1</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="p">)</span><span class="p">;</span> <span class="c1">//等待线程执行退出
+</span><span class="c1"></span>    <span class="n">t2</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">//g++ -o main main.cpp -std=c++11 -lpthread
+</span></code></pre></div><p>例2：</p>
+<div class="highlight"><pre class="chroma"><code class="language-c++" data-lang="c++"><span class="cp">#</span><span class="cp">include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span><span class="cp"></span><span class="cp">#</span><span class="cp">include</span> <span class="cpf">&lt;thread&gt;</span><span class="cp">
+</span><span class="cp"></span><span class="cp">#</span><span class="cp">include</span> <span class="cpf">&lt;chrono&gt;</span><span class="cp">
+</span><span class="cp"></span> 
+<span class="kt">void</span> <span class="nf">foo</span><span class="p">(</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">this_thread</span><span class="o">:</span><span class="o">:</span><span class="n">sleep_for</span><span class="p">(</span><span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">chrono</span><span class="o">:</span><span class="o">:</span><span class="n">seconds</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span>
+ 
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="kr">thread</span> <span class="n">t</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">cout</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="sa"></span><span class="s">&#34;</span><span class="s">before starting, joinable: </span><span class="s">&#34;</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">boolalpha</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="n">t</span><span class="p">.</span><span class="n">joinable</span><span class="p">(</span><span class="p">)</span>
+              <span class="o">&lt;</span><span class="o">&lt;</span> <span class="sa"></span><span class="sc">&#39;</span><span class="sc">\n</span><span class="sc">&#39;</span><span class="p">;</span>
+ 
+    <span class="n">t</span> <span class="o">=</span> <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="kr">thread</span><span class="p">(</span><span class="n">foo</span><span class="p">)</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">cout</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="sa"></span><span class="s">&#34;</span><span class="s">after starting, joinable: </span><span class="s">&#34;</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="n">t</span><span class="p">.</span><span class="n">joinable</span><span class="p">(</span><span class="p">)</span> 
+              <span class="o">&lt;</span><span class="o">&lt;</span> <span class="sa"></span><span class="sc">&#39;</span><span class="sc">\n</span><span class="sc">&#39;</span><span class="p">;</span>
+ 
+    <span class="n">t</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">cout</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="sa"></span><span class="s">&#34;</span><span class="s">after joining, joinable: </span><span class="s">&#34;</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="n">t</span><span class="p">.</span><span class="n">joinable</span><span class="p">(</span><span class="p">)</span> 
+              <span class="o">&lt;</span><span class="o">&lt;</span> <span class="sa"></span><span class="sc">&#39;</span><span class="sc">\n</span><span class="sc">&#39;</span><span class="p">;</span>
+<span class="p">}</span>
+
+</code></pre></div><p>例3：</p>
+<div class="highlight"><pre class="chroma"><code class="language-c++" data-lang="c++"><span class="cp">#</span><span class="cp">include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp">
+</span><span class="cp"></span><span class="cp">#</span><span class="cp">include</span> <span class="cpf">&lt;chrono&gt;</span><span class="cp">
+</span><span class="cp"></span><span class="cp">#</span><span class="cp">include</span> <span class="cpf">&lt;thread&gt;</span><span class="cp">
+</span><span class="cp"></span> 
+<span class="kt">void</span> <span class="nf">independentThread</span><span class="p">(</span><span class="p">)</span> 
+<span class="p">{</span>
+    <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">cout</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="sa"></span><span class="s">&#34;</span><span class="s">Starting concurrent thread.</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">this_thread</span><span class="o">:</span><span class="o">:</span><span class="n">sleep_for</span><span class="p">(</span><span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">chrono</span><span class="o">:</span><span class="o">:</span><span class="n">seconds</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">cout</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="sa"></span><span class="s">&#34;</span><span class="s">Exiting concurrent thread.</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+<span class="p">}</span>
+ 
+<span class="kt">void</span> <span class="nf">threadCaller</span><span class="p">(</span><span class="p">)</span> 
+<span class="p">{</span>
+    <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">cout</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="sa"></span><span class="s">&#34;</span><span class="s">Starting thread caller.</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="kr">thread</span> <span class="n">t</span><span class="p">(</span><span class="n">independentThread</span><span class="p">)</span><span class="p">;</span>
+    <span class="n">t</span><span class="p">.</span><span class="n">detach</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">this_thread</span><span class="o">:</span><span class="o">:</span><span class="n">sleep_for</span><span class="p">(</span><span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">chrono</span><span class="o">:</span><span class="o">:</span><span class="n">seconds</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">cout</span> <span class="o">&lt;</span><span class="o">&lt;</span> <span class="sa"></span><span class="s">&#34;</span><span class="s">Exiting thread caller.</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">;</span>
+<span class="p">}</span>
+ 
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="p">)</span> 
+<span class="p">{</span>
+    <span class="n">threadCaller</span><span class="p">(</span><span class="p">)</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">this_thread</span><span class="o">:</span><span class="o">:</span><span class="n">sleep_for</span><span class="p">(</span><span class="n">std</span><span class="o">:</span><span class="o">:</span><span class="n">chrono</span><span class="o">:</span><span class="o">:</span><span class="n">seconds</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span><span class="p">)</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div><p>参考：</p>
+<p><a href="https://en.cppreference.com/w/cpp/thread/thread">https://en.cppreference.com/w/cpp/thread/thread</a></p><div class="edit-meta">
+Last updated on 16 Jun 2020
+
+
+<br>
+Published on 16 Jun 2020
+<br><a href="https://github.com/wantmoretime/wjdsite//edit/master/content/C&#43;&#43;11%5cthread%e5%a4%9a%e7%ba%bf%e7%a8%8b.md" class="edit-page"><i class="fas fa-pen-square"></i> Edit on GitHub</a></div><nav class="pagination"><a class="nav nav-prev" href="/wjdsite/c&#43;&#43;11/" title="C&#43;&#43; 11"><i class="fas fa-arrow-left" aria-hidden="true"></i> Prev - C&#43;&#43; 11</a>
+<a class="nav nav-next" href="/wjdsite/c&#43;&#43;11/auto/" title="auto关键字">Next - auto关键字 <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+</nav><footer><p class="powered">Powered by <a href="https://gohugo.io">Hugo</a>. Theme by <a href="https://themes.gohugo.io/hugo-theme-techdoc/">TechDoc</a>. Designed by <a href="https://github.com/thingsym/hugo-theme-techdoc">Thingsym</a>.</p>
+</footer>
+</main><div class="sidebar">
+
+<nav class="open-menu">
+<ul>
+<li class=""><a href="https://wantmoretime.github.io/wjdsite/">Home</a></li>
+
+<li class=""><a href="/wjdsite/network/">网络编程</a>
+  
+<ul class="sub-menu">
+<li class=""><a href="/wjdsite/network/%E5%AD%97%E8%8A%82%E5%BA%8F/">字节序</a></li>
+<li class=""><a href="/wjdsite/network/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B%E7%9A%84io%E6%A8%A1%E5%9E%8B/">网络编程中的IO模型</a></li>
+<li class=""><a href="/wjdsite/network/epoll/">epoll</a></li>
+</ul>
+  
+</li>
+
+<li class=""><a href="/wjdsite/protocals/">协议类</a>
+  
+</li>
+
+<li class=""><a href="/wjdsite/c&#43;&#43;/">C&#43;&#43;</a>
+  
+<ul class="sub-menu">
+<li class=""><a href="/wjdsite/c&#43;&#43;/c&#43;&#43;_object_model/">The C&#43;&#43; Object Model</a></li>
+<li class=""><a href="/wjdsite/c&#43;&#43;/cache_queue/">缓存队列</a></li>
+<li class=""><a href="/wjdsite/c&#43;&#43;/rw_file/">C/C&#43;&#43;读写文件</a></li>
+<li class=""><a href="/wjdsite/c&#43;&#43;/c&#43;&#43;_sington_template/">C&#43;&#43;单例模式</a></li>
+<li class=""><a href="/wjdsite/c&#43;&#43;/thread_lock/">线程锁</a></li>
+<li class=""><a href="/wjdsite/c&#43;&#43;/function_pointers/">C&#43;&#43;函数指针</a></li>
+</ul>
+  
+</li>
+
+<li class="parent"><a href="/wjdsite/c&#43;&#43;11/">C&#43;&#43; 11</a>
+  
+<ul class="sub-menu">
+<li class="active"><a href="/wjdsite/c&#43;&#43;11/thread%E5%A4%9A%E7%BA%BF%E7%A8%8B/">std::thread</a></li>
+<li class=""><a href="/wjdsite/c&#43;&#43;11/auto/">auto关键字</a></li>
+<li class=""><a href="/wjdsite/c&#43;&#43;11/lambda%E8%A1%A8%E8%BE%BE%E5%BC%8F/">lambda表达式</a></li>
+<li class=""><a href="/wjdsite/c&#43;&#43;11/emplace_back/">C&#43;&#43;11 emplace相关函数</a></li>
+</ul>
+  
+</li>
+
+<li class=""><a href="/wjdsite/go/">Go</a>
+  
+</li>
+
+<li class=""><a href="/wjdsite/tools/">工具/软件</a>
+  
+<ul class="sub-menu">
+<li class=""><a href="/wjdsite/tools/docker/">docker简单使用</a></li>
+<li class=""><a href="/wjdsite/tools/gdb/">GDB调试</a></li>
+<li class=""><a href="/wjdsite/tools/linux_cmd/">Linux常用命令</a></li>
+<li class=""><a href="/wjdsite/tools/github&#43;hugo_build_myblog/">Github&#43;Hugo搭建个人博客网站</a></li>
+</ul>
+  
+</li>
+</ul>
+</nav>
+
+
+
+<div class="sidebar-footer"></div>
+</div>
+</div><a href="#" id="backtothetop-fixed" class="backtothetop"
+ data-backtothetop-duration="600"
+ data-backtothetop-easing="easeOutQuart"
+ data-backtothetop-fixed-fadeIn="1000"
+ data-backtothetop-fixed-fadeOut="1000"
+ data-backtothetop-fixed-bottom="10"
+ data-backtothetop-fixed-right="20">
+<span class="fa-layers fa-fw">
+<i class="fas fa-circle"></i>
+<i class="fas fa-arrow-circle-up"></i>
+</span></a>
+</div>
+</body>
+</html>
